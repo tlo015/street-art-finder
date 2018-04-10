@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <!-- Flickr API -->
+    <script src="assets/javascript/flickr-api.js"></script>
+
     <title>Street Art Finder</title>
 </head>
 <body>
@@ -19,17 +24,25 @@
 
 <!-- hold map -->
 <div class="container">
-    <div class="map" id="interactive_map"></div>
+    <div id="map"></div>
 </div>
 
 <!-- results and user interaction -->
 <div class="container">
-    <!-- Art Image  -->
-    <div class="art-image">
-        <img src="" class="image" id="art-img">
+
+      <!-- Art Location -->
+    <div class="art-location" id="location">
+
     </div>
-    <!-- Art Location -->
-    <div class="art-location" id-"location"></div>
+
+    <!-- Art Image  -->
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+              </div>
+            </div>
+          </div>
+
     <!-- Form  -->
     <form>
         <div class="form-group">
