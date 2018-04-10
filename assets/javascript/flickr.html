@@ -1,0 +1,108 @@
+<!-- eventually rename this file to js to run script -->
+<!DOCTYPE html> 
+<html>
+  <head>
+    <style>
+       #map, #flickr-image {
+        height: 400px;
+        width: 100%;
+       }
+    </style>
+    <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <h3>My Flicker Demo</h3>
+    <div id="map"></div>
+    <div id="flickr-image"></div>
+    <script>
+      function initMap() {
+        var uluru = {lat: 34.03154, lng: -118.47591};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCPzN7uAtoa0I5Z1fD-gdh5UhKy9ywzwX4&callback=initMap">
+    </script>
+
+    <script>
+      jQuery(function(){
+    
+        // --------------
+        // Settings
+        // --------------
+        
+        // Your API key
+        var apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e';
+        
+        // The API request that we're sending to flickr. 
+        // Note: You might have to change stuff below depending on what you get back.
+        // TODO: Can we make this easier and avoid the changing below?
+        var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&tags=streetart&lat=34.04117&lon=-118.23298&radius=20&per_page=25'
+        console.log(jsonRequest); 
+        // The URL to the image that you want to show before the images are loaded.
+        // Used to indicate that we're actually doing stuff, so an animated GIF is a good
+        // idea. Generate here: http://www.ajaxload.info/
+        // var imageLoaderUrl = '/images/ajax-loader.gif'
+        
+        
+        // // --------------
+        // // Loading and displaying the images
+        // // --------------
+        
+        // // An image loader to indicate that we do stuff for the user
+        // jQuery('<img alt="">').attr('id', 'loader').attr('src', imageLoaderUrl).appendTo('#flickr-images');
+    
+        // The initial json request to flickr
+        jQuery.getJSON(jsonRequest, function(data){
+        console.log(data); 
+          // Loop through the results with the following function
+          jQuery.each(data.photos.photo, function(i,item){
+    
+            // Build the url of the photo in order to link to it
+            var photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg'
+            console.log("this is the photo"+photoURL)
+            // Create an imgCont string variable which will hold all the link location,
+            // title, author link, and author name into a text string
+            var imgCont = '\
+              <div class="image-container"> \
+                <a class="title" href="http://www.flickr.com/photos/' + data.photos + '/' + item.id + '"> \
+                  <img src="' + photoURL + '" /> \
+                </a>';
+            console.log("this ims imgCont"+imgCont);
+    
+            // Close the div in the 'imgCont' variable
+            imgCont += '</div>';
+    
+            // Append the 'imgCont' variable to the document
+            jQuery(imgCont).appendTo('#flickr-image');
+          });
+        });
+      
+        jQuery('#loader').remove();
+        
+      // need to iterate
+        var photoID = "41190834911"
+      var newRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + photoID ;
+      console.log(newRequest); 
+      jQuery.getJSON(newRequest, function(data){
+        console.log(data); 
+
+      });
+      });
+
+
+
+      </script>
+  </body>
+</html>
+
