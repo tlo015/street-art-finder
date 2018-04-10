@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Street Art Finder</title>
+</head>
+<body>
+
+
+<!-- Search Bar -->
+<div class="container">
+    <input type="text" placeholder="Search.." class="input-search" id="search-bar">
+    <button type="submit" class="search" id="search-btn">Search</button>
+</div>
+
+<!-- hold map -->
+<div class="container">
+    <div class="map" id="interactive_map"></div>
+</div>
+
+<!-- results and user interaction -->
+<div class="container">
+    <!-- Art Image  -->
+    <div class="art-image">
+        <img src="" class="image" id="art-img">
+    </div>
+    <!-- Art Location -->
+    <div class="art-location" id-"location"></div>
+    <!-- Form  -->
+    <form>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="name" class="form-control" id="input-name" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="accuracy">Location Accuracy</label>
+            <input type="accuracy" class="form-control" id="location-accuracy" placeholder="How accurate is the location">
+        </div>
+        <div class="form-group">
+            <label for="comments">Comments</label>
+            <input type="comments" class="form-control" id="input-comments" placeholder="Comments regarding the artwork">
+        </div>
+        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+    </form>
+
+</div>
+    
+</body>
+</html>
