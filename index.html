@@ -1,66 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <!-- Flickr API -->
-    <script src="assets/javascript/flickr-api.js"></script>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
     <title>Street Art Finder</title>
 </head>
+
 <body>
 
+    <div id="filter-firebase"><button class="btn btn-primary">Filter Firebase</button></div>
 
-<!-- Search Bar -->
-<div class="container">
-    <input type="text" placeholder="Search.." class="input-search" id="search-bar">
-    <button type="submit" class="search" id="search-btn">Search</button>
-</div>
-
-<!-- hold map -->
-<div class="container">
-    <div id="map"></div>
-</div>
-
-<!-- results and user interaction -->
-<div class="container">
-
-      <!-- Art Location -->
-    <div class="art-location" id="location">
-
-    </div>
-
-    <!-- Art Image  -->
-    
+    <!-- Search Bar -->
     <div class="container">
-    
-        <div id="flickr-image"></div>
-        
+        <input type="text" placeholder="Search.." class="input-search" id="search-bar">
+        <button type="submit" class="search" id="search-btn">Search</button>
     </div>
 
-    <!-- Form  -->
-    <form>
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="name" class="form-control" id="input-name" placeholder="Enter name">
-        </div>
-        <div class="form-group">
-            <label for="accuracy">Location Accuracy</label>
-            <input type="accuracy" class="form-control" id="location-accuracy" placeholder="How accurate is the location">
-        </div>
-        <div class="form-group">
-            <label for="comments">Comments</label>
-            <input type="comments" class="form-control" id="input-comments" placeholder="Comments regarding the artwork">
-        </div>
-        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
-    </form>
+    <!-- hold map -->
+    <div class="container">
+        <div id="map"></div>
+    </div>
 
-</div>
-    
+    <!-- results and user interaction -->
+    <div class="container">
+
+        <!-- Art Location -->
+        <div class="art-location" id="location">
+
+        </div>
+
+        <!-- Art Image  -->
+
+        <div class="container">
+
+            <div id="flickr-image"></div>
+
+        </div>
+
+        <!-- Form  -->
+        <form>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="name" class="form-control" id="input-name" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+                <label for="accuracy">Location Accuracy</label>
+                <input type="accuracy" class="form-control" id="location-accuracy" placeholder="How accurate is the location">
+            </div>
+            <div class="form-group">
+                <label for="comments">Comments</label>
+                <input type="comments" class="form-control" id="input-comments" placeholder="Comments regarding the artwork">
+            </div>
+            <button id="update-image-object" type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+        </form>
+
+    </div>
+
 </body>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<!-- Flickr API -->
+<script src="assets/javascript/flickr-api.js"></script>
+
 </html>
