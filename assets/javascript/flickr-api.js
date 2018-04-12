@@ -1,6 +1,3 @@
-
-
-
 // Initialize Firebase
 var config = {
   apiKey: "AIzaSyA3AZ7qHSzHU0at4cDM2BmxnFozscFwQ1s",
@@ -12,7 +9,9 @@ var config = {
 };
 firebase.initializeApp(config);
 
+
 var database = firebase.database(), snapshotGlobal;
+
 
 
 // --------------
@@ -41,6 +40,7 @@ var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.se
 // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
 $.getJSON(jsonRequest, function (data) {
   //console.log(data); // --> provides you with a snapshot of the object
+
 
   // Loop through the results with the following function
   $.each(data.photos.photo, function (i, item) {
@@ -115,3 +115,5 @@ $("#filter-firebase").on("click", function () {
 
   // a snapshot of the location query object
 
+
+  });
