@@ -13,9 +13,9 @@ firebase.initializeApp(config);
 var database = firebase.database(), snapshotGlobal,apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e';
 
 function filterFirebase() {
-  console.log(snapshotGlobal);
+  //console.log(snapshotGlobal);
   for (const key in snapshotGlobal) {
-    console.log(snapshotGlobal[key]);
+    //console.log(snapshotGlobal[key]);
     if (!snapshotGlobal[key].hasOwnProperty("comments")) {
       database.ref(key).remove();
     }
@@ -24,9 +24,7 @@ function filterFirebase() {
 
 database.ref().on("value", function (snapshot) {
   snapshotGlobal = snapshot.val();
-  console.log(snapshotGlobal);
 });
-
 
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
@@ -69,12 +67,16 @@ $("#search-btn").on("click", function (event) {
       // Create the imgContainer with string variable which will hold all the link location,
       // title, author link, and author name into a text string. 
 
-      var newPin = '<button type="button" class="btn btn-primary" id=' + photoID + ' data-image=' + photoURL + ' data-toggle="modal" data-target="#info-modal">' + photoID + '</button>';
-
+      var newPin = ' <button type="button" class="btn btn-primary" id=' + photoID + ' data-image=' + photoURL + ' data-toggle="modal" data-target="#info-modal">' + photoID + '</button></a>';
+      
       // For now we will append every image  Append the 'newPin' variable to the document
       $('#mapWrapper').append(newPin);
     });
   });
+
+
+
+  
 });
 
 //displays the corresponding image and assigns all relevant data attributes to image
@@ -86,18 +88,53 @@ $("#mapWrapper").on("click", "button", function () {
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == id) {
       const comments = snapshotGlobal[key].comments;
+      $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7FNOyFFI0nCh4cLNq0", () => {
+        $lat = parseFloat(snapshotGlobal[key].latitude);
+        $lng = parseFloat(snapshotGlobal[key].longitude);
+        var myLatLng = {
+          lat: $lat,
+          lng: $lng
+        }
+    
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 11,
+          center: myLatLng
+        })
+    
+        var marker = new google.maps.Marker({
+          position: myLatLng,
+          map: map,
+          title: snapshotGlobal[key].title
+        })
+
+        var infowindow = new google.maps.InfoWindow({
+          content: "<div style='width:150px; text-align: left;'>"+ "<font color='black'>Title: <b>" + snapshotGlobal[key].title + "</b></font><BR/><font color='black'>Rating: <b>" + snapshotGlobal[key].rating + "</b></font><BR/><br><center><img src='" + url + "' alt='" + snapshotGlobal[key].title + "' height='100' width='100'></center>" +"</div>"
+        });
+
+
+        marker.addListener('click', function() {
+          infowindow.open(map, marker);
+        });
+
+        
+      });
+
+
+
+
       for (const key in comments) {
         const newComment = "<div class='card-body'><p>" + comments[key] + "</p></div>";
         $("#stored-comments").append(newComment);
       }
 
-    }
+    };
+
   }
 });
 
 //submits comments to firebase
 $("#submit-btn").on("click", function () {
-  console.log(snapshotGlobal);
+  //console.log(snapshotGlobal);
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
       database.ref(key + "/comments").push($("#input-comments").val().trim());
@@ -106,6 +143,10 @@ $("#submit-btn").on("click", function () {
   const newComment = "<div class='card-body'><p>" + $("#input-comments").val().trim() + "</p></div>";
   $("#stored-comments").append(newComment);
 });
+
+
+
+
 // GEO TAGGING AJAX CALLS
 function geotagging(inputID) {
 
@@ -115,9 +156,7 @@ function geotagging(inputID) {
 
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == inputID) {
-      console.log(snapshotGlobal[key].id)
       existsAlready = true;
-
     }
   }
   $.getJSON(newRequest, function (data) {
@@ -137,6 +176,4 @@ function geotagging(inputID) {
     }
 
   });
-}
-
-  // a snapshot of the location query object
+};
