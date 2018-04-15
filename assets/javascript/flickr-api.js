@@ -10,7 +10,7 @@ var config = {
 firebase.initializeApp(config);
 
 
-var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', mapLatLng, map;
+var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', mapLatLng, map, markerArray = [];
 var lat = "34.04117";
 var lon = "-118.23298";
 var radius = "25";
@@ -54,6 +54,7 @@ function generatePin(id, latitude, longitude, title, rating, url) {
     map: map,
     title: title
   })
+  markerArray.push(marker);
   var infowindow = new google.maps.InfoWindow({
     content: "<div style='width:150px; text-align: left;'>" + "<font color='black'>Title: <b>" + title + "</b></font><BR/><font color='black'>Rating: <b>" + rating + "</b></font><BR/><br><center><img class='clickable-image' id=" + id + ' data-image=' + url + " data-toggle='modal' data-target='#info-modal' src='" + url + "' alt='" + title + "' height='100' width='100'></center>" + "</div>"
   });
@@ -61,30 +62,44 @@ function generatePin(id, latitude, longitude, title, rating, url) {
   marker.addListener('click', function () {
     infowindow.open(map, marker);
   });
-  
+
+}
+
+// Sets the map on all markers in the array.
+function setMapOnAll(map) {
+  for (var i = 0; i < markerArray.length; i++) {
+    markerArray[i].setMap(map);
+  }
 }
 
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
-  var currentPosition=map.getBounds();
-  lat=(currentPosition.f.b+currentPosition.f.f)/2;
-  lon=(currentPosition.b.b+currentPosition.b.f)/2;
-  radius=(currentPosition.f.f-currentPosition.f.b)*111;
-  console.log(lat,lon,radius);
-  if(radius>20){
-    radius=20;
-  }
-  $("#mapWrapper").empty();
+  //resets firebase
   filterFirebase();
 
-  var photoURL = "";
-  var photoID = ""
+  // Removes the markers from the map, and deletes them from the array.
+  setMapOnAll(null);
+  markerArray.length=0;
+
+  var currentPosition = map.getBounds();
+  lat = (currentPosition.f.b + currentPosition.f.f) / 2;
+  lon = (currentPosition.b.b + currentPosition.b.f) / 2;
+  radius = (currentPosition.f.f - currentPosition.f.b) * 111;
+  console.log(lat, lon, radius);
+  if (radius > 20) {
+    radius = 20;
+  }
+
+  var photoURL = "", photoID = "", tags = $("#search-bar").val().trim();
 
   // QUERY TERMS --> COULD BE DYNAMICALLY PASSED BY USER IN THE FUTURE
 
   var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&tags=streetart&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page;
-  //console.log(jsonRequest);
 
+  if (tags !== "") {
+    jsonRequest += "tags=" + tags;
+  }
+  console.log(jsonRequest);
   // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
   $.getJSON(jsonRequest, function (data) {
     // Loop through the results with the following function
@@ -92,11 +107,11 @@ $("#search-btn").on("click", function (event) {
       // Build + store in var the url of the photo in order to link to it
       photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg'
       // console.log(photoURL);
-      photoID = item.id;  
+      photoID = item.id;
       //console.log(item.id);
       // Create the imgContainer with string variable which will hold all the link location,
       // title, author link, and author name into a text string. 
-      geotagging(photoID,photoURL);
+      geotagging(photoID, photoURL);
     });
   });
 });
