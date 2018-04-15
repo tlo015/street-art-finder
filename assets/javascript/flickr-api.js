@@ -115,6 +115,7 @@ $("#mapWrapper").on("click", "button", function () {
         marker.addListener('click', function() {
           infowindow.open(map, marker);
         });
+        infowindow.open(map, marker);
 
         
       });
