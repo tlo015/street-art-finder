@@ -15,7 +15,9 @@ var lat = "34.04117";
 var lon = "-118.23298";
 var radius = "25";
 var per_page = "25";
+
 /*
+
 function filterFirebase() {
   //console.log(snapshotGlobal);
   for (const key in snapshotGlobal) {
@@ -44,6 +46,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7F
   });
 });
 
+
 function generatePin(id, latitude, longitude, title, rating, url) {
   //console.log("generating...",id,latitude,longitude,title,rating,url);
   var myLatLng = {
@@ -57,20 +60,24 @@ function generatePin(id, latitude, longitude, title, rating, url) {
   })
   markerArray.push(marker);
   var infowindow = new google.maps.InfoWindow({
+
     content: "<div style='width:150px; text-align: left;'>" + "<font color='black'>Title: <b>" + title +
       "</b></font><BR/><font color='black'>Rating: <b>" + rating +
       "</b></font><BR/><br><center><img class='clickable-image' id=" + id + " data-image=" + url +
       " data-lat=" + latitude + " data-lon=" + longitude + " data-rating=" + rating +
       " data-toggle='modal' data-target='#info-modal' src='" + url +
       "' alt='" + title + "' height='100' width='100'></center>" + "</div>"
+
   });
 
   marker.addListener('click', function () {
     infowindow.open(map, marker);
   });
+
   map.addListener("click", function () {
     infowindow.close();
   })
+
 
 }
 
@@ -84,9 +91,11 @@ function setMapOnAll(map) {
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
 
+
   // Removes the markers from the map, and deletes them from the array.
   setMapOnAll(null);
   markerArray.length = 0;
+
 
   var currentPosition = map.getBounds();
   lat = (currentPosition.f.b + currentPosition.f.f) / 2;
@@ -100,6 +109,7 @@ $("#search-btn").on("click", function (event) {
   var photoURL = "", photoID = "", tags = $("#search-bar").val().trim();
 
   // QUERY TERMS --> COULD BE DYNAMICALLY PASSED BY USER IN THE FUTURE
+
 
   var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=streetart';
 

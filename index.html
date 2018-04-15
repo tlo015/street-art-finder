@@ -9,32 +9,32 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Street Art Finder</title>
 </head>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
 <body>
     <!-- Header/Navbar/Jumbotron-->
     <nav class="navbar navbar-light">
             <img class="logo-img" src="assets/images/logo.png">
-  
         <!-- Search Bar -->
-        <form class="form-inline">
+        <form class="form-inline" id="searchContainer">
             <input type="text" placeholder="Search.." class="input-search" id="search-bar">
-            <button type="submit" class="search" id="search-btn">Search</button>
+            <button type="submit" class="search" id="search-btn"><i class="fa fa-search"></i></button>
         </form>
     </nav>
-
     <!-- hold map -->
     <div id="map"></div>
-
     <!-- hold mobile image to only show on mobile and on click of pin-->
     <!-- refer to Redfin mobile for inspo -->
     <!-- Upon clicking image, modal will show up with img, form and comment -->
     <div class="art-image" id="mobileImgWrapper">
         <img src="" class="image" id="art-img" alt="street art">
     </div>
-
+    
     <!-- Button trigger modal -->
     <!-- Once map is generated and linked, the button will be the pins on the map -->
 
@@ -47,31 +47,31 @@
                     <!-- FLICKR Image Will Go Here -->
                     <img src="" class="image" id="flickr-image" alt="Art Image">
                     <!-- COMMENTS USER INPUT  -->
-                    <div class="card">
+                    <div class="card input-card">
                         <!-- ratings -->
-                        <div class="rate">
-                            <input type="radio" id="star5" name="rate" value="5" />
-                            <label for="star5" title="text">5 stars</label>
-                            <input type="radio" id="star4" name="rate" value="4" />
-                            <label for="star4" title="text">4 stars</label>
-                            <input type="radio" id="star3" name="rate" value="3" />
-                            <label for="star3" title="text">3 stars</label>
-                            <input type="radio" id="star2" name="rate" value="2" />
-                            <label for="star2" title="text">2 stars</label>
-                            <input type="radio" id="star1" name="rate" value="1" />
-                            <label for="star1" title="text">1 star</label>
+                        <div class="stars">
+                            <form action="">
+                                <input class="star star-5" id="star-5" type="radio" name="star"/>
+                                <label class="star star-5" for="star-5"></label>
+                                <input class="star star-4" id="star-4" type="radio" name="star"/>
+                                <label class="star star-4" for="star-4"></label>
+                                <input class="star star-3" id="star-3" type="radio" name="star"/>
+                                <label class="star star-3" for="star-3"></label>
+                                <input class="star star-2" id="star-2" type="radio" name="star"/>
+                                <label class="star star-2" for="star-2"></label>
+                                <input class="star star-1" id="star-1" type="radio" name="star"/>
+                                <label class="star star-1" for="star-1"></label>
+                            </form>
                         </div>
-
-
                         <!-- comments -->
                         <input type="comments" class="card-body" id="input-comments" placeholder="Enter comments here regarding the artwork">
                         <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
                     </div>
 
                     <!-- STORED Comments -->
-                    <div class="card">
+                    <div class="card" id="stored">
                         <div class="card-header">
-                            Comments
+                            <h6> COMMENTS </h6>
                         </div>
                         <div id="stored-comments">
                         </div>
@@ -80,6 +80,10 @@
             </div>
         </div>
     </div>
+
+    <!-- <div id="filter-firebase">
+        <button class="btn btn-primary">Filter Firebase</button>
+    </div> -->
 
     <!-- BOOTSTRAP JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
