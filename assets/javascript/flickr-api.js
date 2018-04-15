@@ -14,7 +14,7 @@ var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f
 var lat = "34.04117";
 var lon = "-118.23298";
 var radius = "25";
-var per_page = "5";
+var per_page = "25";
 
 function filterFirebase() {
   //console.log(snapshotGlobal);
@@ -44,7 +44,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7F
 });
 
 function generatePin(id, latitude, longitude, title, rating, url) {
-  console.log("generating...",id,latitude,longitude,title,rating,url);
+  //console.log("generating...",id,latitude,longitude,title,rating,url);
   var myLatLng = {
     lat: parseFloat(latitude),
     lng: parseFloat(longitude)
@@ -66,6 +66,14 @@ function generatePin(id, latitude, longitude, title, rating, url) {
 
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
+  var currentPosition=map.getBounds();
+  lat=(currentPosition.f.b+currentPosition.f.f)/2;
+  lon=(currentPosition.b.b+currentPosition.b.f)/2;
+  radius=(currentPosition.f.f-currentPosition.f.b)*111;
+  console.log(lat,lon,radius);
+  if(radius>20){
+    radius=20;
+  }
   $("#mapWrapper").empty();
   filterFirebase();
 
