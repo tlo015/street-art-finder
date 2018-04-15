@@ -62,6 +62,9 @@ function generatePin(id, latitude, longitude, title, rating, url) {
   marker.addListener('click', function () {
     infowindow.open(map, marker);
   });
+  map.addListener("click",function(){
+    infowindow.close();
+  })
 
 }
 
@@ -94,10 +97,10 @@ $("#search-btn").on("click", function (event) {
 
   // QUERY TERMS --> COULD BE DYNAMICALLY PASSED BY USER IN THE FUTURE
 
-  var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&tags=streetart&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page;
+  var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page+'&tags=streetart';
 
   if (tags !== "") {
-    jsonRequest += "tags=" + tags;
+    jsonRequest += "," + tags;
   }
   console.log(jsonRequest);
   // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
