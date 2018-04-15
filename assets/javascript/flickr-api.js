@@ -10,7 +10,11 @@ var config = {
 firebase.initializeApp(config);
 
 
-var database = firebase.database(), snapshotGlobal,apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e';
+var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', mapLatLng, map;
+var lat = "34.04117";
+var lon = "-118.23298";
+var radius = "25";
+var per_page = "5";
 
 function filterFirebase() {
   //console.log(snapshotGlobal);
@@ -26,61 +30,71 @@ database.ref().on("value", function (snapshot) {
   snapshotGlobal = snapshot.val();
 });
 
+$.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7FNOyFFI0nCh4cLNq0", () => {
+
+  mapLatLng = {
+    lat: parseFloat(lat),
+    lng: parseFloat(lon)
+  };
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 11,
+    center: mapLatLng
+  });
+});
+
+function generatePin(id, latitude, longitude, title, rating, url) {
+  console.log("generating...",id,latitude,longitude,title,rating,url);
+  var myLatLng = {
+    lat: parseFloat(latitude),
+    lng: parseFloat(longitude)
+  };
+  var marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: title
+  })
+  var infowindow = new google.maps.InfoWindow({
+    content: "<div style='width:150px; text-align: left;'>" + "<font color='black'>Title: <b>" + title + "</b></font><BR/><font color='black'>Rating: <b>" + rating + "</b></font><BR/><br><center><img class='clickable-image' id=" + id + ' data-image=' + url + " data-toggle='modal' data-target='#info-modal' src='" + url + "' alt='" + title + "' height='100' width='100'></center>" + "</div>"
+  });
+
+  marker.addListener('click', function () {
+    infowindow.open(map, marker);
+  });
+  
+}
+
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
   $("#mapWrapper").empty();
   filterFirebase();
-  // Main API Query on request that we're sending to Flickr. 
 
-  // --------------
-  // Settings
-  // --------------
-
-  // VARIABLES FOR DATABASE
   var photoURL = "";
   var photoID = ""
 
   // QUERY TERMS --> COULD BE DYNAMICALLY PASSED BY USER IN THE FUTURE
-  var lat = "34.04117";
-  var lon = "-118.23298";
-  var radius = "25";
-  var per_page = "5";
 
   var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&tags=streetart&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page;
   //console.log(jsonRequest);
 
   // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
   $.getJSON(jsonRequest, function (data) {
-    //console.log(data); // --> provides you with a snapshot of the object
-
-
     // Loop through the results with the following function
     $.each(data.photos.photo, function (i, item) {
-
       // Build + store in var the url of the photo in order to link to it
       photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg'
-     // console.log(photoURL);
-      photoID = item.id;
+      // console.log(photoURL);
+      photoID = item.id;  
       //console.log(item.id);
-      geotagging(photoID);
-
       // Create the imgContainer with string variable which will hold all the link location,
       // title, author link, and author name into a text string. 
-
-      var newPin = ' <button type="button" class="btn btn-primary" id=' + photoID + ' data-image=' + photoURL + ' data-toggle="modal" data-target="#info-modal">' + photoID + '</button></a>';
-      
-      // For now we will append every image  Append the 'newPin' variable to the document
-      $('#mapWrapper').append(newPin);
+      geotagging(photoID,photoURL);
     });
   });
-
-
-
-  
 });
 
 //displays the corresponding image and assigns all relevant data attributes to image
-$("#mapWrapper").on("click", "button", function () {
+$("#map").on("click", ".clickable-image", function () {
   var url = $(this).attr("data-image"), id = $(this).attr("id");
   $("#input-comments").val("");
   $("#flickr-image").attr("src", url).attr("data-id", id);
@@ -88,41 +102,6 @@ $("#mapWrapper").on("click", "button", function () {
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == id) {
       const comments = snapshotGlobal[key].comments;
-      $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7FNOyFFI0nCh4cLNq0", () => {
-        $lat = parseFloat(snapshotGlobal[key].latitude);
-        $lng = parseFloat(snapshotGlobal[key].longitude);
-        var myLatLng = {
-          lat: $lat,
-          lng: $lng
-        }
-    
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 11,
-          center: myLatLng
-        })
-    
-        var marker = new google.maps.Marker({
-          position: myLatLng,
-          map: map,
-          title: snapshotGlobal[key].title
-        })
-
-        var infowindow = new google.maps.InfoWindow({
-          content: "<div style='width:150px; text-align: left;'>"+ "<font color='black'>Title: <b>" + snapshotGlobal[key].title + "</b></font><BR/><font color='black'>Rating: <b>" + snapshotGlobal[key].rating + "</b></font><BR/><br><center><img src='" + url + "' alt='" + snapshotGlobal[key].title + "' height='100' width='100'></center>" +"</div>"
-        });
-
-
-        marker.addListener('click', function() {
-          infowindow.open(map, marker);
-        });
-        infowindow.open(map, marker);
-
-        
-      });
-
-
-
-
       for (const key in comments) {
         const newComment = "<div class='card-body'><p>" + comments[key] + "</p></div>";
         $("#stored-comments").append(newComment);
@@ -149,17 +128,19 @@ $("#submit-btn").on("click", function () {
 
 
 // GEO TAGGING AJAX CALLS
-function geotagging(inputID) {
+function geotagging(inputID, inputURL) {
 
-  var newRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + inputID, existsAlready = false;
+  var newRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + inputID, existsAlready = false, existingKey, lat, lon;
   //console.log(newRequest);
   // Another AJAX call using the shortcut --> 
 
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == inputID) {
       existsAlready = true;
+      existingKey = key;
+
     }
-  }
+  };
   $.getJSON(newRequest, function (data) {
 
     //console.log(data); // snapshot of the object
@@ -168,13 +149,15 @@ function geotagging(inputID) {
     if (!existsAlready) {
       database.ref().push({
         id: inputID,
-        url: newRequest,
+        url: inputURL,
         latitude: data.photo.location.latitude,
         longitude: data.photo.location.longitude,
         title: "none",
         rating: "none"
-      })
+      });
+      generatePin(inputID, data.photo.location.latitude, data.photo.location.longitude, "none", "none", inputURL)
+    } else {
+      generatePin(snapshotGlobal[existingKey].id, snapshotGlobal[existingKey].latitude, snapshotGlobal[existingKey].longitude, snapshotGlobal[existingKey].title, snapshotGlobal[existingKey].rating, snapshotGlobal[existingKey].url);
     }
-
   });
 };
