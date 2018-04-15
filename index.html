@@ -18,26 +18,21 @@
 
 <body>
     <!-- Header/Navbar/Jumbotron-->
-    <nav class="navbar navbar-light" id="masthead">
-        <img class="logo-img" id="logoImg" src="assets/images/logo.png">
-        <img class="mobile-logo-img" id="mobileLogoImg" src="assets/images/mobilelogo.png">
-
+    <nav class="navbar navbar-light">
+            <img class="logo-img" src="assets/images/logo.png">
         <!-- Search Bar -->
         <form class="form-inline" id="searchContainer">
             <input type="text" placeholder="Search.." class="input-search" id="search-bar">
             <button type="submit" class="search" id="search-btn"><i class="fa fa-search"></i></button>
         </form>
     </nav>
-
     <!-- hold map -->
-    <div id="mapWrapper"></div>
-    <div id="map">
-        <!-- hold mobile image to only show on mobile and on click of pin-->
-        <!-- refer to Redfin mobile for inspo -->
-        <!-- Upon clicking image, modal will show up with img, form and comment -->
-        <div class="art-image" id="mobileImgWrapper">
-            <img src="" class="image" id="art-img" alt="street art">
-        </div>
+    <div id="map"></div>
+    <!-- hold mobile image to only show on mobile and on click of pin-->
+    <!-- refer to Redfin mobile for inspo -->
+    <!-- Upon clicking image, modal will show up with img, form and comment -->
+    <div class="art-image" id="mobileImgWrapper">
+        <img src="" class="image" id="art-img" alt="street art">
     </div>
     
     <!-- Button trigger modal -->
@@ -68,10 +63,9 @@
                                 <label class="star star-1" for="star-1"></label>
                             </form>
                         </div>
-
                         <!-- comments -->
-                        <textarea type="comments" class="card-body" id="input-comments" placeholder="Comments regarding the artwork"></textarea>
-                        <button type="submit" class="btn" id="submit-btn">Submit</button>
+                        <input type="comments" class="card-body" id="input-comments" placeholder="Enter comments here regarding the artwork">
+                        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
                     </div>
 
                     <!-- STORED Comments -->

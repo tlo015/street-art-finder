@@ -3,6 +3,9 @@
  width: 100%;
 }
 
+.clickable-image:hover{
+    cursor: pointer;
+}
 *{
     box-sizing: border-box;
 }

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analyze Sample</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+    <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> -->
+</head>
+<body>
+
+<h1>Street Art Finder Modal Display</h1>
+<div class="container">
+        <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="inputGroup-sizing-default">Image URL</span>
+                </div>
+                <input type="text" name="inputImage" id="inputImage" class="form-control" aria-label="Default" value="https://static1.squarespace.com/static/57478a207da24f0db50fe06a/t/59d2d2724c326deaf07b4a71/1506988668387/DSC01066+%281%29.jpg"aria-describedby="inputGroup-sizing-default">
+              </div>
+<input type="text" name="inputImage" id="inputImage" value="https://static1.squarespace.com/static/57478a207da24f0db50fe06a/t/59d2d2724c326deaf07b4a71/1506988668387/DSC01066+%281%29.jpg" />
+<button class="btn-primary btn" onclick="processImage()">Analyze image</button>
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
+        Launch demo modal
+      </button>
+
+<br><br>
+        <div class="row justify-content-md-center">
+                
+                <div id="imageDiv">
+                        Source image:
+                        <br><br>
+                        <img id="sourceImage" style="width:400px; " />
+                    </div>
+                    <div id="flickr-image"></div>
+                
+          </div>
+
+    
+        
+        
+
+
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                    <div id="jsonOutput" style="width:600px; display:table-cell;">
+                            Response:
+                            <br><br>
+                            
+                            <textarea id="responseTextArea" class="UIInput" style="width:580px; height:400px;"></textarea>
+                        </div>
+    
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
+
+
+<script type="text/javascript">
+    function processImage() {
+        // **********************************************
+        // *** Update or verify the following values. ***
+        // **********************************************
+        // Replace the subscriptionKey string value with your valid subscription key.
+        var subscriptionKey = "cea593821c6740b3bc736c1011fda5d7";
+        // Replace or verify the region.
+        //
+        // You must use the same region in your REST API call as you used to obtain your subscription keys.
+        // For example, if you obtained your subscription keys from the westus region, replace
+        // "westcentralus" in the URI below with "westus".
+        //
+        // NOTE: Free trial subscription keys are generated in the westcentralus region, so if you are using
+        // a free trial subscription key, you should not need to change this region.
+        var uriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=tags&language=en";
+        var uriBase2 = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/describe?maxCandidates=3";
+        // Request parameters.
+        var params = {
+            "visualFeatures": "Categories,Description,Color",
+            "details": "",
+            "language": "en",
+        };;
+        // Display the image.
+        var sourceImageUrl = document.getElementById("inputImage").value; // gets value from input user 
+        document.querySelector("#sourceImage").src = sourceImageUrl; // sets the image on the screen to display
+        // Perform the REST API call.
+        $.ajax({
+            url: uriBase ,
+            // + "?" + $.param(params),
+            // Request headers.
+            beforeSend: function(xhrObj){
+                xhrObj.setRequestHeader("Content-Type","application/json");
+                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
+            },
+            type: "POST",
+            // Request body.
+            data: '{"url": ' + '"' + sourceImageUrl + '"}',
+        })
+        .done(function(data) {
+            //capturing tags as an object; 
+            console.log (data.tags); 
+            var tags = data.tags; 
+            console.log (tags); 
+
+            // Show formatted JSON on webpage.
+            $("#responseTextArea").val(JSON.stringify(data, null, 2));
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            // Display error message.
+            var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+            errorString += (jqXHR.responseText === "") ? "" : jQuery.parseJSON(jqXHR.responseText).message;
+            alert(errorString);
+        });
+    };
+</script>
+
+
+<script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBzpdLj-wdNuu9oOpFqOxBTqXK3DvTWNRg",
+    authDomain: "test-project-78b67.firebaseapp.com",
+    databaseURL: "https://test-project-78b67.firebaseio.com",
+    projectId: "test-project-78b67",
+    storageBucket: "test-project-78b67.appspot.com",
+    messagingSenderId: "843229389551"
+  };
+  firebase.initializeApp(config);
+
+
+var database = firebase.database(), snapshotGlobal;
+
+
+
+// --------------
+// Settings
+// --------------
+
+// FLICKR API key
+var apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e';
+
+// VARIABLES FOR DATABASE
+var photoURL = "";
+var photoID = ""
+
+// QUERY TERMS --> COULD BE DYNAMICALLY PASSED BY USER IN THE FUTURE
+var lat = "34.04117";
+var lon = "-118.23298";
+var radius = "25";
+var per_page = "10";
+
+
+// Main API Query on request that we're sending to Flickr. 
+
+var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&tags=streetart&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page;
+//console.log(jsonRequest);
+
+// This is a shorthanded AJAX function --> Our initial JSON request to Flickr
+$.getJSON(jsonRequest, function (data) {
+  //console.log(data); // --> provides you with a snapshot of the object
+
+
+  // Loop through the results with the following function
+  $.each(data.photos.photo, function (i, item) {
+
+    // Build + store in var the url of the photo in order to link to it
+    photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg'
+    console.log(photoURL);
+    photoID = item.id;
+    console.log(item.id);
+
+
+    // Create the imgContainer with string variable which will hold all the link location,
+    // title, author link, and author name into a text string. 
+
+    var imgCont = '<div class="image-container"> \
+            <a class="title" href="http://www.flickr.com/photos/' + photoURL + '"> \
+              <img id='+ photoID + ' src="' + photoURL + '" /> \
+            </a>';
+
+    // Close the div in the 'imgCont' variable
+    imgCont += '</div>';
+
+    // For now we will append every image  Append the 'imgCont' variable to the document
+    $('#flickr-image').append(imgCont);
+    $("#update-image-object").attr("data-id",photoID);
+  });
+});
+/*
+$("#update-image-object").on("click",function(){
+  const name,
+
+})*/
+// GEO TAGGING AJAX CALLS
+
+</script>

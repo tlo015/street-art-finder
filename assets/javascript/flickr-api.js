@@ -16,6 +16,8 @@ var lon = "-118.23298";
 var radius = "25";
 var per_page = "25";
 
+/*
+
 function filterFirebase() {
   //console.log(snapshotGlobal);
   for (const key in snapshotGlobal) {
@@ -25,9 +27,10 @@ function filterFirebase() {
     }
   }
 }
-
+*/
 database.ref().on("value", function (snapshot) {
   snapshotGlobal = snapshot.val();
+  console.log("firebase updated");
 });
 
 $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7FNOyFFI0nCh4cLNq0", () => {
@@ -43,6 +46,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7F
   });
 });
 
+
 function generatePin(id, latitude, longitude, title, rating, url) {
   //console.log("generating...",id,latitude,longitude,title,rating,url);
   var myLatLng = {
@@ -56,12 +60,24 @@ function generatePin(id, latitude, longitude, title, rating, url) {
   })
   markerArray.push(marker);
   var infowindow = new google.maps.InfoWindow({
-    content: "<div style='width:150px; text-align: left;'>" + "<font color='black'>Title: <b>" + title + "</b></font><BR/><font color='black'>Rating: <b>" + rating + "</b></font><BR/><br><center><img class='clickable-image' id=" + id + ' data-image=' + url + " data-toggle='modal' data-target='#info-modal' src='" + url + "' alt='" + title + "' height='100' width='100'></center>" + "</div>"
+
+    content: "<div style='width:150px; text-align: left;'>" + "<font color='black'>Title: <b>" + title +
+      "</b></font><BR/><font color='black'>Rating: <b>" + rating +
+      "</b></font><BR/><br><center><img class='clickable-image' id=" + id + " data-image=" + url +
+      " data-lat=" + latitude + " data-lon=" + longitude + " data-rating=" + rating +
+      " data-toggle='modal' data-target='#info-modal' src='" + url +
+      "' alt='" + title + "' height='100' width='100'></center>" + "</div>"
+
   });
 
   marker.addListener('click', function () {
     infowindow.open(map, marker);
   });
+
+  map.addListener("click", function () {
+    infowindow.close();
+  })
+
 
 }
 
@@ -74,12 +90,12 @@ function setMapOnAll(map) {
 
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
-  //resets firebase
-  filterFirebase();
+
 
   // Removes the markers from the map, and deletes them from the array.
   setMapOnAll(null);
-  markerArray.length=0;
+  markerArray.length = 0;
+
 
   var currentPosition = map.getBounds();
   lat = (currentPosition.f.b + currentPosition.f.f) / 2;
@@ -94,10 +110,11 @@ $("#search-btn").on("click", function (event) {
 
   // QUERY TERMS --> COULD BE DYNAMICALLY PASSED BY USER IN THE FUTURE
 
-  var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&tags=streetart&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page;
+
+  var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=streetart';
 
   if (tags !== "") {
-    jsonRequest += "tags=" + tags;
+    jsonRequest += "," + tags;
   }
   console.log(jsonRequest);
   // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
@@ -120,7 +137,9 @@ $("#search-btn").on("click", function (event) {
 $("#map").on("click", ".clickable-image", function () {
   var url = $(this).attr("data-image"), id = $(this).attr("id");
   $("#input-comments").val("");
-  $("#flickr-image").attr("src", url).attr("data-id", id);
+  $("#flickr-image").attr("src", url).attr("data-id", id).attr("data-lon", $(this).attr("data-lon"))
+    .attr("data-lat", $(this).attr("data-lat")).attr("data-url", $(this).attr("data-image"))
+    .attr("alt", $(this).attr("alt")).attr("data-rating", $(this).attr("data-rating"));
   $("#stored-comments").empty();
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == id) {
@@ -135,16 +154,42 @@ $("#map").on("click", ".clickable-image", function () {
   }
 });
 
-//submits comments to firebase
-$("#submit-btn").on("click", function () {
+function pushtoFirebase() {
+  var existsAlready = false, comment = $("#input-comments").val().trim();
   //console.log(snapshotGlobal);
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
-      database.ref(key + "/comments").push($("#input-comments").val().trim());
+      database.ref(key + "/comments").push(comment);
+      existsAlready = true;
+      console.log("it exists in firebase");
     }
+  }
+  if (!existsAlready) {
+    console.log("pushing to firebase");
+    database.ref().push({
+      id: $("#flickr-image").attr("data-id"),
+      url: $("#flickr-image").attr("data-url"),
+      latitude: $("#flickr-image").attr("data-lat"),
+      longitude: $("#flickr-image").attr("data-lon"),
+      title: $("#flickr-image").attr("alt"),
+      rating: $("#flickr-image").attr("data-rating"),
+    }, function () {
+      for (const key in snapshotGlobal) {
+        if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
+          database.ref(key + "/comments").push(comment);
+        }
+      }
+    });
+
   }
   const newComment = "<div class='card-body'><p>" + $("#input-comments").val().trim() + "</p></div>";
   $("#stored-comments").append(newComment);
+  $("#input-comments").val("");
+}
+
+//submits comments to firebase
+$("#submit-btn").on("click", function () {
+  pushtoFirebase();
 });
 
 
@@ -170,14 +215,6 @@ function geotagging(inputID, inputURL) {
     //console.log(data.photo.location.latitude)
     //console.log(data.photo.location.longitude)
     if (!existsAlready) {
-      database.ref().push({
-        id: inputID,
-        url: inputURL,
-        latitude: data.photo.location.latitude,
-        longitude: data.photo.location.longitude,
-        title: "none",
-        rating: "none"
-      });
       generatePin(inputID, data.photo.location.latitude, data.photo.location.longitude, "none", "none", inputURL)
     } else {
       generatePin(snapshotGlobal[existingKey].id, snapshotGlobal[existingKey].latitude, snapshotGlobal[existingKey].longitude, snapshotGlobal[existingKey].title, snapshotGlobal[existingKey].rating, snapshotGlobal[existingKey].url);
