@@ -19,20 +19,60 @@
 <body>
     <!-- Header/Navbar/Jumbotron-->
     <nav class="navbar navbar-light">
-            <img class="logo-img" src="assets/images/logo.png">
+        <img class="logo-img" src="assets/images/logo.png">
+        <img class="mobile-logo" src="assets/images/mobilelogo.png">
         <!-- Search Bar -->
         <form class="form-inline" id="searchContainer">
             <input type="text" placeholder="Search.." class="input-search" id="search-bar">
             <button type="submit" class="search" id="search-btn"><i class="fa fa-search"></i></button>
         </form>
     </nav>
+
+    <div class="carousel-container">
+        <!-- Carousel -->
+        <div id="carousel" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            <li class="img1 active" data-target="#carouselData" data-slide-to="0"></li>
+            <li class="img2" data-target="#carouselData" data-slide-to="1"></li>
+            <li class="img3" data-target="#carouselData" data-slide-to="2"></li>
+          </ol>
+    
+          <!-- wrapper for slides -->
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img class="d-block carousel-img" src="assets/images/one.jpg" alt="First slide">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>A collections of visual art created in public spaces</h5>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img class="d-block carousel-img" src="assets/images/two.jpg" alt="Second slide">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>A focus on instagram-able art in Los Angeles</h5>
+              </div>
+            </div>
+            <div class="carousel-item">
+              <img class="d-block carousel-img" src="assets/images/three.jpg" alt="Third slide">
+              <div class="carousel-caption d-none d-md-block">
+                <h5>All types of artist expressions</h5>
+              </div>
+            </div>
+          </div>
+    
+        </div>
+      </div>
+
+      <div class="start-btn-container">
+        <button type="button" class="start-btn">Lets Start</button>
+      </div>
+
+<div class="main-body-container">
     <!-- hold map -->
     <div id="map"></div>
     <!-- hold mobile image to only show on mobile and on click of pin-->
     <!-- refer to Redfin mobile for inspo -->
     <!-- Upon clicking image, modal will show up with img, form and comment -->
     <div class="art-image" id="mobileImgWrapper">
-        <img src="" class="image" id="art-img" alt="street art">
     </div>
     
     <!-- Button trigger modal -->
@@ -73,13 +113,13 @@
                         <div class="card-header">
                             <h6> COMMENTS </h6>
                         </div>
-                        <div id="stored-comments">
-                        </div>
+                        <div id="stored-comments"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
     <!-- <div id="filter-firebase">
         <button class="btn btn-primary">Filter Firebase</button>
@@ -99,7 +139,10 @@
     crossorigin="anonymous"></script>
 <!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/4.12.1/firebase.js"></script>
+
 <!-- Flickr API -->
 <script src="assets/javascript/flickr-api.js"></script>
+<!-- Home Page -->
+<script src="assets/javascript/mobile-responsive.js"></script>
 
 </html>
