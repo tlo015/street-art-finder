@@ -24,6 +24,10 @@ body{
     z-index: 1;
 }
 
+.info-box-text{
+    margin-bottom: .2rem;
+}
+
 .logo-img{
     height: 150px;
 }
