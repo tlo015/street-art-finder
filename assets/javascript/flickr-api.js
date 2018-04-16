@@ -31,17 +31,19 @@ database.ref().on("value", function (snapshot) {
   //console.log("firebase updated");
 });
 
-//initializes map
-$.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7FNOyFFI0nCh4cLNq0", () => {
+$(".start-btn").on("click", function () {
+  //initializes map
+  $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7FNOyFFI0nCh4cLNq0", () => {
 
-  mapLatLng = {
-    lat: parseFloat(lat),
-    lng: parseFloat(lon)
-  };
+    mapLatLng = {
+      lat: parseFloat(lat),
+      lng: parseFloat(lon)
+    };
 
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 11,
-    center: mapLatLng
+    map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 11,
+      center: mapLatLng
+    });
   });
 });
 
