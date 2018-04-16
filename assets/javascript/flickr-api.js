@@ -10,9 +10,9 @@ var config = {
 firebase.initializeApp(config);
 
 
-var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', per_page = "25", mapLatLng, map, markerArray = [], starRating;
+var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', per_page = "100", mapLatLng, map, markerArray = [], starRating;
 //default map coordinates
-var lat = "34.04117", lon = "-118.23298", radius = "25";
+var lat = "34.04117", lon = "-118.23298", radius = "20";
 
 
 function filterFirebase() {
@@ -147,6 +147,7 @@ $("#map").on("click", ".clickable-image", function () {
   <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star" />\
   <label data-rating="1" class="star star-1" for="star-1"></label></form>');
   var url = $(this).attr("data-image"), id = $(this).attr("id"), title = $(this).attr("alt");
+  $("#input-name").val("anonymous");
   $("#input-comments").val("");
   $("#rating-header").text($(this).attr("data-rating"));
   if (title == "none") {
@@ -163,23 +164,29 @@ $("#map").on("click", ".clickable-image", function () {
     if (snapshotGlobal[key].id == id) {
       const comments = snapshotGlobal[key].comments;
       for (const key in comments) {
-        const newComment = "<div class='card-body'><p>" + comments[key] + "</p></div>";
+        const newComment = "<div class='card-body'><p>Name: " + comments[key].name + "</p><p>Comment: " + comments[key].comment + "</p></div>";
         $("#stored-comments").append(newComment);
       }
 
     };
+    
 
   }
 });
 
 //updates firebase, infowindow, and module with relevant information
 function pushtoFirebase() {
-  var existsAlready = false, comment = $("#input-comments").val().trim(), title = $("#input-title").val().trim(), ratingDisplay, existingRating = 0, ratingCount = 0;
+  var existsAlready = false, comment = $("#input-comments").val().trim(), name = $("#input-name").val().trim(), title = $("#input-title").val().trim(), ratingDisplay, existingRating = 0, ratingCount = 0;
   //console.log(snapshotGlobal);
   //console.log(title);
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
-      if (comment != "") { database.ref(key + "/comments").push(comment); }
+      if (comment != "") {
+        database.ref(key + "/comments").push({
+          name: name,
+          comment: comment
+        });
+      }
       database.ref(key).update({
         title: title
       });
@@ -219,7 +226,12 @@ function pushtoFirebase() {
       $("#title-header").text(title);
       for (const key in snapshotGlobal) {
         if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
-          if (comment != "") { database.ref(key + "/comments").push(comment); }
+          if (comment != "") {
+            database.ref(key + "/comments").push({
+              comment: comment,
+              name: name
+            });
+          }
           if (starRating != null) {
             database.ref(key + "/rating").push(starRating, function () {
               for (const key in snapshotGlobal) {
@@ -241,9 +253,10 @@ function pushtoFirebase() {
     });
   }
   if (comment != "") {
-    const newComment = "<div class='card-body'><p>" + comment + "</p></div>";
+    const newComment = "<div class='card-body'><p>Name: " + name + "</p><p>Comment: " + comment + "</p></div>";
     $("#stored-comments").append(newComment);
     $("#input-comments").val("");
+    $("input-name").val("");
   }
 }
 
