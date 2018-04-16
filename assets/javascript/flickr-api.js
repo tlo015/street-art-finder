@@ -10,11 +10,9 @@ var config = {
 firebase.initializeApp(config);
 
 
-var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', mapLatLng, map, markerArray = [], starRating;
-var lat = "34.04117";
-var lon = "-118.23298";
-var radius = "25";
-var per_page = "25";
+var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', per_page = "25", mapLatLng, map, markerArray = [], starRating;
+//default map coordinates
+var lat = "34.04117", lon = "-118.23298", radius = "25";
 
 
 function filterFirebase() {
@@ -27,11 +25,13 @@ function filterFirebase() {
   }
 }
 
+//stores firebase locally when firebase is changed to simplify data manipulation
 database.ref().on("value", function (snapshot) {
   snapshotGlobal = snapshot.val();
-  console.log("firebase updated");
+  //console.log("firebase updated");
 });
 
+//initializes map
 $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7FNOyFFI0nCh4cLNq0", () => {
 
   mapLatLng = {
@@ -45,7 +45,7 @@ $.getScript("https://maps.googleapis.com/maps/api/js?key=AIzaSyCIBnMitsKmINmFl7F
   });
 });
 
-
+//generates a google maps marker and infowindow on the map with relevant information
 function generatePin(id, latitude, longitude, title, rating, url) {
   //console.log("generating...",id,latitude,longitude,title,rating,url);
   var myLatLng = {
@@ -55,14 +55,15 @@ function generatePin(id, latitude, longitude, title, rating, url) {
   var marker = new google.maps.Marker({
     position: myLatLng,
     map: map,
-    title: title
+    title: title,
+    id: id
   })
   markerArray.push(marker);
   var infowindow = new google.maps.InfoWindow({
 
-    content: "<div style='width:150px; text-align: left;'>" + "<font color='black'>Title: <b>" + title +
-      "</b></font><BR/><font color='black'>Rating: <b>" + rating +
-      "</b></font><BR/><br><center><img class='clickable-image' id=" + id + " data-image=" + url +
+    content: "<div style='width:150px; text-align: left;'>" + "<p class='info-box-text'>Title: <span id='title" + id + "'>" + title +
+      "</span></p><p class='info-box-text'>Rating: <span id='rating" + id + "'>" + rating +
+      "</span></p><center><img class='clickable-image' id=" + id + " data-image=" + url +
       " data-lat=" + latitude + " data-lon=" + longitude + " data-rating=" + rating +
       " data-toggle='modal' data-target='#info-modal' src='" + url +
       "' alt='" + title + "' height='100' width='100'></center>" + "</div>"
@@ -87,6 +88,7 @@ function setMapOnAll(map) {
   }
 }
 
+//initiates search and populates the current map area with pins
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
   filterFirebase();
@@ -107,15 +109,11 @@ $("#search-btn").on("click", function (event) {
 
   var photoURL = "", photoID = "", tags = $("#search-bar").val().trim();
 
-  // QUERY TERMS --> COULD BE DYNAMICALLY PASSED BY USER IN THE FUTURE
-
-
   var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=streetart';
 
   if (tags !== "") {
     jsonRequest += "," + tags;
   }
-  console.log(jsonRequest);
   // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
   $.getJSON(jsonRequest, function (data) {
     // Loop through the results with the following function
@@ -135,11 +133,25 @@ $("#search-btn").on("click", function (event) {
 //displays the corresponding image and assigns all relevant data attributes to image
 $("#map").on("click", ".clickable-image", function () {
   starRating = null;
-  console.log(starRating);
-  var url = $(this).attr("data-image"), id = $(this).attr("id");
+  $(".stars").html('<form action="">\
+  <input data-rating="5" class="star star-5" id="star-5" type="radio" name="star" />\
+  <label data-rating="5" class="star star-5" for="star-5"></label>\
+  <input data-rating="4" class="star star-4" id="star-4" type="radio" name="star" />\
+  <label data-rating="4" class="star star-4" for="star-4"></label>\
+  <input data-rating="3" class="star star-3" id="star-3" type="radio" name="star" />\
+  <label data-rating="3" class="star star-3" for="star-3"></label>\
+  <input data-rating="2" class="star star-2" id="star-2" type="radio" name="star" />\
+  <label data-rating="2" class="star star-2" for="star-2"></label>\
+  <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star" />\
+  <label data-rating="1" class="star star-1" for="star-1"></label></form>');
+  var url = $(this).attr("data-image"), id = $(this).attr("id"), title = $(this).attr("alt");
   $("#input-comments").val("");
   $("#rating-header").text($(this).attr("data-rating"));
-  $("#title-header").text($(this).attr("alt"));
+  if (title == "none") {
+    $("#title-header").text("");
+  } else {
+    $("#title-header").text(title);
+  }
   $("#input-title").val($(this).attr("alt"));
   $("#flickr-image").attr("src", url).attr("data-id", id).attr("data-lon", $(this).attr("data-lon"))
     .attr("data-lat", $(this).attr("data-lat")).attr("data-url", $(this).attr("data-image"))
@@ -158,18 +170,35 @@ $("#map").on("click", ".clickable-image", function () {
   }
 });
 
+//updates firebase, infowindow, and module with relevant information
 function pushtoFirebase() {
-  var existsAlready = false, comment = $("#input-comments").val().trim(), title = $("#input-title").val().trim();
+  var existsAlready = false, comment = $("#input-comments").val().trim(), title = $("#input-title").val().trim(), ratingDisplay, existingRating = 0, ratingCount = 0;
   //console.log(snapshotGlobal);
-  console.log(title);
+  //console.log(title);
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
       if (comment != "") { database.ref(key + "/comments").push(comment); }
       database.ref(key).update({
         title: title
       });
+      $("#title" + $("#flickr-image").attr("data-id")).text(title);
       $("#title-header").text(title);
-      if (starRating != null) { database.ref(key + "/rating").push(starRating) };
+      if (starRating != null) {
+        database.ref(key + "/rating").push(starRating, function () {
+          for (const key in snapshotGlobal) {
+            if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
+              for (const ratingKey in snapshotGlobal[key].rating) {
+                existingRating += parseFloat(snapshotGlobal[key].rating[ratingKey]);
+                ratingCount++;
+              }
+              existingRating /= ratingCount;
+              ratingDisplay = existingRating.toFixed(2);
+            }
+          }
+          $("#rating" + $("#flickr-image").attr("data-id")).text(ratingDisplay);
+          $("#rating-header").text(ratingDisplay);
+        });
+      }
       existsAlready = true;
       console.log("it exists in firebase");
     }
@@ -184,15 +213,30 @@ function pushtoFirebase() {
       title: title,
       rating: $("#flickr-image").attr("data-rating")
     }, function () {
+      $("#title" + $("#flickr-image").attr("data-id")).text(title);
       $("#title-header").text(title);
       for (const key in snapshotGlobal) {
         if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
           if (comment != "") { database.ref(key + "/comments").push(comment); }
-          if (starRating != null) { database.ref(key + "/rating").push(starRating) };
+          if (starRating != null) {
+            database.ref(key + "/rating").push(starRating, function () {
+              for (const key in snapshotGlobal) {
+                if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
+                  for (const ratingKey in snapshotGlobal[key].rating) {
+                    existingRating += parseFloat(snapshotGlobal[key].rating[ratingKey]);
+                    ratingCount++;
+                  }
+                  existingRating /= ratingCount;
+                  ratingDisplay = existingRating.toFixed(2);
+                }
+              }
+              $("#rating" + $("#flickr-image").attr("data-id")).text(ratingDisplay);
+              $("#rating-header").text(ratingDisplay);
+            });
+          }
         }
       }
     });
-
   }
   if (comment != "") {
     const newComment = "<div class='card-body'><p>" + comment + "</p></div>";
@@ -201,9 +245,10 @@ function pushtoFirebase() {
   }
 }
 
+//event listener for rating input
 $(".stars").on("click", ".star", function () {
   starRating = $(this).attr("data-rating");
-  console.log(starRating);
+  console.log("current rating: ", starRating);
 })
 
 //submits comments to firebase
@@ -211,12 +256,8 @@ $("#submit-btn").on("click", function () {
   pushtoFirebase();
 });
 
-
-
-
 // GEO TAGGING AJAX CALLS
 function geotagging(inputID, inputURL) {
-
   var newRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + inputID, existsAlready = false, existingKey, lat, lon, existingRating = 0, ratingCount = 0, ratingDisplay = "none";
   //console.log(newRequest);
   // Another AJAX call using the shortcut --> 
@@ -225,11 +266,9 @@ function geotagging(inputID, inputURL) {
     if (snapshotGlobal[key].id == inputID) {
       existsAlready = true;
       existingKey = key;
-
     }
   };
   $.getJSON(newRequest, function (data) {
-
     //console.log(data); // snapshot of the object
     //console.log(data.photo.location.latitude)
     //console.log(data.photo.location.longitude)
