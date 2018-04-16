@@ -14,16 +14,16 @@
     <title>Street Art Finder</title>
 </head>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
 <body>
     <!-- Header/Navbar/Jumbotron-->
     <nav class="navbar navbar-light">
-            <img class="logo-img" src="assets/images/logo.png">
+        <img class="logo-img" src="assets/images/logo.png">
         <!-- Search Bar -->
         <form class="form-inline" id="searchContainer">
             <input type="text" placeholder="Search.." class="input-search" id="search-bar">
-            <button type="submit" class="search" id="search-btn"><i class="fa fa-search"></i></button>
+            <button type="submit" class="search" id="search-btn">
+                <i class="fa fa-search"></i>
+            </button>
         </form>
     </nav>
     <!-- hold map -->
@@ -34,7 +34,7 @@
     <div class="art-image" id="mobileImgWrapper">
         <img src="" class="image" id="art-img" alt="street art">
     </div>
-    
+
     <!-- Button trigger modal -->
     <!-- Once map is generated and linked, the button will be the pins on the map -->
 
@@ -44,23 +44,27 @@
             <div class="modal-content">
                 <!-- results and user interaction -->
                 <div class="modal-body">
-                    <h1 id="title-header"></h1><h3>Rating: <span id="rating-header"></span></h3>
+                    <h1 id="title-header"></h1>
+                    <h3>Rating:
+                        <span id="rating-header"></span>
+                    </h3>
                     <!-- FLICKR Image Will Go Here -->
                     <img src="" class="image" id="flickr-image" alt="Art Image">
                     <!-- COMMENTS USER INPUT  -->
                     <div class="card input-card">
                         <!-- ratings -->
+                        <p>Submit Rating:</p>
                         <div class="stars">
                             <form action="">
-                                <input data-rating="5" class="star star-5" id="star-5" type="radio" name="star"/>
+                                <input data-rating="5" class="star star-5" id="star-5" type="radio" name="star" />
                                 <label data-rating="5" class="star star-5" for="star-5"></label>
-                                <input data-rating="4" class="star star-4" id="star-4" type="radio" name="star"/>
+                                <input data-rating="4" class="star star-4" id="star-4" type="radio" name="star" />
                                 <label data-rating="4" class="star star-4" for="star-4"></label>
-                                <input data-rating="3" class="star star-3" id="star-3" type="radio" name="star"/>
+                                <input data-rating="3" class="star star-3" id="star-3" type="radio" name="star" />
                                 <label data-rating="3" class="star star-3" for="star-3"></label>
-                                <input data-rating="2" class="star star-2" id="star-2" type="radio" name="star"/>
+                                <input data-rating="2" class="star star-2" id="star-2" type="radio" name="star" />
                                 <label data-rating="2" class="star star-2" for="star-2"></label>
-                                <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star"/>
+                                <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star" />
                                 <label data-rating="1" class="star star-1" for="star-1"></label>
                             </form>
                         </div>
@@ -86,19 +90,13 @@
         </div>
     </div>
 
-    <!-- <div id="filter-firebase">
-        <button class="btn btn-primary">Filter Firebase</button>
-    </div> -->
-
-    <!-- BOOTSTRAP JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
-        crossorigin="anonymous"></script>
 
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+    crossorigin="anonymous"></script>
 <!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>

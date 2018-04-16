@@ -133,10 +133,25 @@ $("#search-btn").on("click", function (event) {
 //displays the corresponding image and assigns all relevant data attributes to image
 $("#map").on("click", ".clickable-image", function () {
   starRating = null;
-  var url = $(this).attr("data-image"), id = $(this).attr("id");
+  $(".stars").html('<form action="">\
+  <input data-rating="5" class="star star-5" id="star-5" type="radio" name="star" />\
+  <label data-rating="5" class="star star-5" for="star-5"></label>\
+  <input data-rating="4" class="star star-4" id="star-4" type="radio" name="star" />\
+  <label data-rating="4" class="star star-4" for="star-4"></label>\
+  <input data-rating="3" class="star star-3" id="star-3" type="radio" name="star" />\
+  <label data-rating="3" class="star star-3" for="star-3"></label>\
+  <input data-rating="2" class="star star-2" id="star-2" type="radio" name="star" />\
+  <label data-rating="2" class="star star-2" for="star-2"></label>\
+  <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star" />\
+  <label data-rating="1" class="star star-1" for="star-1"></label></form>');
+  var url = $(this).attr("data-image"), id = $(this).attr("id"), title = $(this).attr("alt");
   $("#input-comments").val("");
   $("#rating-header").text($(this).attr("data-rating"));
-  $("#title-header").text($(this).attr("alt"));
+  if (title == "none") {
+    $("#title-header").text("");
+  } else {
+    $("#title-header").text(title);
+  }
   $("#input-title").val($(this).attr("alt"));
   $("#flickr-image").attr("src", url).attr("data-id", id).attr("data-lon", $(this).attr("data-lon"))
     .attr("data-lat", $(this).attr("data-lat")).attr("data-url", $(this).attr("data-image"))
@@ -233,7 +248,7 @@ function pushtoFirebase() {
 //event listener for rating input
 $(".stars").on("click", ".star", function () {
   starRating = $(this).attr("data-rating");
-  console.log("current rating: ",starRating);
+  console.log("current rating: ", starRating);
 })
 
 //submits comments to firebase
