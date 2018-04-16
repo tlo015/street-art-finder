@@ -44,6 +44,7 @@
             <div class="modal-content">
                 <!-- results and user interaction -->
                 <div class="modal-body">
+                    <h1>Rating: <span id="rating-header"></span> Title: <span id="title-header"></span></h1>
                     <!-- FLICKR Image Will Go Here -->
                     <img src="" class="image" id="flickr-image" alt="Art Image">
                     <!-- COMMENTS USER INPUT  -->
@@ -51,19 +52,23 @@
                         <!-- ratings -->
                         <div class="stars">
                             <form action="">
-                                <input class="star star-5" id="star-5" type="radio" name="star"/>
-                                <label class="star star-5" for="star-5"></label>
-                                <input class="star star-4" id="star-4" type="radio" name="star"/>
-                                <label class="star star-4" for="star-4"></label>
-                                <input class="star star-3" id="star-3" type="radio" name="star"/>
-                                <label class="star star-3" for="star-3"></label>
-                                <input class="star star-2" id="star-2" type="radio" name="star"/>
-                                <label class="star star-2" for="star-2"></label>
-                                <input class="star star-1" id="star-1" type="radio" name="star"/>
-                                <label class="star star-1" for="star-1"></label>
+                                <input data-rating="5" class="star star-5" id="star-5" type="radio" name="star"/>
+                                <label data-rating="5" class="star star-5" for="star-5"></label>
+                                <input data-rating="4" class="star star-4" id="star-4" type="radio" name="star"/>
+                                <label data-rating="4" class="star star-4" for="star-4"></label>
+                                <input data-rating="3" class="star star-3" id="star-3" type="radio" name="star"/>
+                                <label data-rating="3" class="star star-3" for="star-3"></label>
+                                <input data-rating="2" class="star star-2" id="star-2" type="radio" name="star"/>
+                                <label data-rating="2" class="star star-2" for="star-2"></label>
+                                <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star"/>
+                                <label data-rating="1" class="star star-1" for="star-1"></label>
                             </form>
                         </div>
+                        <!-- title -->
+                        <p>Change the title:</p>
+                        <input type="title" class="card-body" id="input-title">
                         <!-- comments -->
+                        <p>Enter Comments:</p>
                         <input type="comments" class="card-body" id="input-comments" placeholder="Enter comments here regarding the artwork">
                         <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
                     </div>
