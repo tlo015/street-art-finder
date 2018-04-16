@@ -10,13 +10,12 @@ var config = {
 firebase.initializeApp(config);
 
 
-var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', mapLatLng, map, markerArray = [];
+var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', mapLatLng, map, markerArray = [], starRating;
 var lat = "34.04117";
 var lon = "-118.23298";
 var radius = "25";
 var per_page = "25";
 
-/*
 
 function filterFirebase() {
   //console.log(snapshotGlobal);
@@ -27,7 +26,7 @@ function filterFirebase() {
     }
   }
 }
-*/
+
 database.ref().on("value", function (snapshot) {
   snapshotGlobal = snapshot.val();
   console.log("firebase updated");
@@ -90,7 +89,7 @@ function setMapOnAll(map) {
 
 $("#search-btn").on("click", function (event) {
   event.preventDefault();
-
+  filterFirebase();
 
   // Removes the markers from the map, and deletes them from the array.
   setMapOnAll(null);
@@ -135,8 +134,13 @@ $("#search-btn").on("click", function (event) {
 
 //displays the corresponding image and assigns all relevant data attributes to image
 $("#map").on("click", ".clickable-image", function () {
+  starRating = null;
+  console.log(starRating);
   var url = $(this).attr("data-image"), id = $(this).attr("id");
   $("#input-comments").val("");
+  $("#rating-header").text($(this).attr("data-rating"));
+  $("#title-header").text($(this).attr("alt"));
+  $("#input-title").val($(this).attr("alt"));
   $("#flickr-image").attr("src", url).attr("data-id", id).attr("data-lon", $(this).attr("data-lon"))
     .attr("data-lat", $(this).attr("data-lat")).attr("data-url", $(this).attr("data-image"))
     .attr("alt", $(this).attr("alt")).attr("data-rating", $(this).attr("data-rating"));
@@ -155,11 +159,17 @@ $("#map").on("click", ".clickable-image", function () {
 });
 
 function pushtoFirebase() {
-  var existsAlready = false, comment = $("#input-comments").val().trim();
+  var existsAlready = false, comment = $("#input-comments").val().trim(), title = $("#input-title").val().trim();
   //console.log(snapshotGlobal);
+  console.log(title);
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
-      database.ref(key + "/comments").push(comment);
+      if (comment != "") { database.ref(key + "/comments").push(comment); }
+      database.ref(key).update({
+        title: title
+      });
+      $("#title-header").text(title);
+      if (starRating != null) { database.ref(key + "/rating").push(starRating) };
       existsAlready = true;
       console.log("it exists in firebase");
     }
@@ -171,21 +181,30 @@ function pushtoFirebase() {
       url: $("#flickr-image").attr("data-url"),
       latitude: $("#flickr-image").attr("data-lat"),
       longitude: $("#flickr-image").attr("data-lon"),
-      title: $("#flickr-image").attr("alt"),
-      rating: $("#flickr-image").attr("data-rating"),
+      title: title,
+      rating: $("#flickr-image").attr("data-rating")
     }, function () {
+      $("#title-header").text(title);
       for (const key in snapshotGlobal) {
         if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
-          database.ref(key + "/comments").push(comment);
+          if (comment != "") { database.ref(key + "/comments").push(comment); }
+          if (starRating != null) { database.ref(key + "/rating").push(starRating) };
         }
       }
     });
 
   }
-  const newComment = "<div class='card-body'><p>" + $("#input-comments").val().trim() + "</p></div>";
-  $("#stored-comments").append(newComment);
-  $("#input-comments").val("");
+  if (comment != "") {
+    const newComment = "<div class='card-body'><p>" + comment + "</p></div>";
+    $("#stored-comments").append(newComment);
+    $("#input-comments").val("");
+  }
 }
+
+$(".stars").on("click", ".star", function () {
+  starRating = $(this).attr("data-rating");
+  console.log(starRating);
+})
 
 //submits comments to firebase
 $("#submit-btn").on("click", function () {
@@ -198,7 +217,7 @@ $("#submit-btn").on("click", function () {
 // GEO TAGGING AJAX CALLS
 function geotagging(inputID, inputURL) {
 
-  var newRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + inputID, existsAlready = false, existingKey, lat, lon;
+  var newRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + inputID, existsAlready = false, existingKey, lat, lon, existingRating = 0, ratingCount = 0, ratingDisplay = "none";
   //console.log(newRequest);
   // Another AJAX call using the shortcut --> 
 
@@ -217,7 +236,15 @@ function geotagging(inputID, inputURL) {
     if (!existsAlready) {
       generatePin(inputID, data.photo.location.latitude, data.photo.location.longitude, "none", "none", inputURL)
     } else {
-      generatePin(snapshotGlobal[existingKey].id, snapshotGlobal[existingKey].latitude, snapshotGlobal[existingKey].longitude, snapshotGlobal[existingKey].title, snapshotGlobal[existingKey].rating, snapshotGlobal[existingKey].url);
+      if (snapshotGlobal[existingKey].rating != "none") {
+        for (const key in snapshotGlobal[existingKey].rating) {
+          existingRating += parseFloat(snapshotGlobal[existingKey].rating[key]);
+          ratingCount++;
+        }
+        existingRating /= ratingCount;
+        ratingDisplay = existingRating.toFixed(2);
+      }
+      generatePin(snapshotGlobal[existingKey].id, snapshotGlobal[existingKey].latitude, snapshotGlobal[existingKey].longitude, snapshotGlobal[existingKey].title, ratingDisplay, snapshotGlobal[existingKey].url);
     }
   });
 };
