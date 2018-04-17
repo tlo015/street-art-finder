@@ -313,7 +313,7 @@ $("#search-btn").on("click", function (event) {
       geotagging(photoID, photoURL);
       getAuthor(photoID);
     });
-  }
+  });
 });
 function getAuthor(picID) {
   var jsonRequest = 'https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + picID ;
