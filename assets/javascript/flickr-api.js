@@ -302,11 +302,29 @@ $("#search-btn").on("click", function (event) {
       // Create the imgContainer with string variable which will hold all the link location,
       // title, author link, and author name into a text string. 
       geotagging(photoID, photoURL);
-      //processImage(photoURL);
+      getAuthor(photoID);
     });
   });
 });
+function getAuthor(picID) {
+  var jsonRequest = 'https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + picID ;
+  console.log(jsonRequest);
+  // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
+  $.getJSON(jsonRequest, function (data) {
+    console.log (data); 
+    console.log (data.photo.dates); 
+    console.log (data.photo.owner.realname); 
+    console.log (data.photo.owner.username); 
+    console.log (data.photo.owner.location); 
 
+
+
+
+    // Loop through the results with the following function
+
+  });
+
+}
 //displays the corresponding image and assigns all relevant data attributes to image
 $("#map").on("click", ".clickable-image", function () {
   starRating = null;
