@@ -111,11 +111,14 @@ $("#search-btn").on("click", function (event) {
 
   var photoURL = "", photoID = "", tags = $("#search-bar").val().trim();
 
-  var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=streetart';
+  var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=mural,grafitti&text=';
 
   if (tags !== "") {
-    jsonRequest += "," + tags;
+    jsonRequest += "'streetart " + tags+"'";
+  }else{
+    jsonRequest += "streetart";
   }
+  console.log(jsonRequest);
   // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
   $.getJSON(jsonRequest, function (data) {
     // Loop through the results with the following function
@@ -128,7 +131,7 @@ $("#search-btn").on("click", function (event) {
       // Create the imgContainer with string variable which will hold all the link location,
       // title, author link, and author name into a text string. 
       geotagging(photoID, photoURL);
-      processImage(photoURL);
+      //processImage(photoURL);
     });
   });
 });
@@ -170,7 +173,7 @@ $("#map").on("click", ".clickable-image", function () {
       }
 
     };
-    
+
 
   }
 });
@@ -303,76 +306,77 @@ function geotagging(inputID, inputURL) {
     }
   });
 };
-    function processImage(url) {
-        // **********************************************
-        // *** Update or verify the following values. ***
-        // **********************************************
-        // Replace the subscriptionKey string value with your valid subscription key.
-        var subscriptionKey = "cea593821c6740b3bc736c1011fda5d7";
-        // Replace or verify the region.
-        //
-        // You must use the same region in your REST API call as you used to obtain your subscription keys.
-        // For example, if you obtained your subscription keys from the westus region, replace
-        // "westcentralus" in the URI below with "westus".
-        //
-        // NOTE: Free trial subscription keys are generated in the westcentralus region, so if you are using
-        // a free trial subscription key, you should not need to change this region.
-        var uriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=tags&language=en";
-        var uriBase2 = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/describe?maxCandidates=3";
-        // Request parameters.
-        var params = {
-            "visualFeatures": "Categories,Description,Color",
-            "details": "",
-            "language": "en",
-        };;
-        // Display the image.
-        var sourceImageUrl = url; // gets value from input user 
-        // document.querySelector("#sourceImage").src = sourceImageUrl; // sets the image on the screen to display
-        // Perform the REST API call.
-        $.ajax({
-            url: uriBase ,
-            // + "?" + $.param(params),
-            // Request headers.
-            beforeSend: function(xhrObj){
-                xhrObj.setRequestHeader("Content-Type","application/json");
-                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
-            },
-            type: "POST",
-            // Request body.
-            data: '{"url": ' + '"' + sourceImageUrl + '"}',
-        })
-        .done(function(data) {
+/*
+function processImage(url) {
+  // **********************************************
+  // *** Update or verify the following values. ***
+  // **********************************************
+  // Replace the subscriptionKey string value with your valid subscription key.
+  var subscriptionKey = "cea593821c6740b3bc736c1011fda5d7";
+  // Replace or verify the region.
+  //
+  // You must use the same region in your REST API call as you used to obtain your subscription keys.
+  // For example, if you obtained your subscription keys from the westus region, replace
+  // "westcentralus" in the URI below with "westus".
+  //
+  // NOTE: Free trial subscription keys are generated in the westcentralus region, so if you are using
+  // a free trial subscription key, you should not need to change this region.
+  var uriBase = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/analyze?visualFeatures=tags&language=en";
+  var uriBase2 = "https://westcentralus.api.cognitive.microsoft.com/vision/v1.0/describe?maxCandidates=3";
+  // Request parameters.
+  var params = {
+    "visualFeatures": "Categories,Description,Color",
+    "details": "",
+    "language": "en",
+  };;
+  // Display the image.
+  var sourceImageUrl = url; // gets value from input user 
+  // document.querySelector("#sourceImage").src = sourceImageUrl; // sets the image on the screen to display
+  // Perform the REST API call.
+  $.ajax({
+    url: uriBase,
+    // + "?" + $.param(params),
+    // Request headers.
+    beforeSend: function (xhrObj) {
+      xhrObj.setRequestHeader("Content-Type", "application/json");
+      xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", subscriptionKey);
+    },
+    type: "POST",
+    // Request body.
+    data: '{"url": ' + '"' + sourceImageUrl + '"}',
+  })
+    .done(function (data) {
 
-          for (let i = 0; i < data.tags.length; i++) {
-            console.log(data.tags[i].name) ;
-            console.log(data.tags[i].confidence) ;
-            var update = $('<input type="button" id="update" value="update" style="width:80px" class="btn btn-primary" />');
-            var remove = $('<input type="button" id="remove" value="remove" style="width:80px" class="btn btn-danger" />');
-            var td = $("<td></td>");
-            var td2 = $("<td></td>");
-            var row = $("<tr>");
+      for (let i = 0; i < data.tags.length; i++) {
+        console.log(data.tags[i].name);
+        console.log(data.tags[i].confidence);
+        var update = $('<input type="button" id="update" value="update" style="width:80px" class="btn btn-primary" />');
+        var remove = $('<input type="button" id="remove" value="remove" style="width:80px" class="btn btn-danger" />');
+        var td = $("<td></td>");
+        var td2 = $("<td></td>");
+        var row = $("<tr>");
 
-                row.append("<td>" + data.tags[i].name + "</td>")
-                .append("<td>" + data.tags[i].confidence + "</td>")
-                $("tbody").append(row);
-                
-              }
-       
-        
-            //capturing tags as an object; 
-            console.log (data.tags); 
-            var tags = data.tags; 
-            console.log (tags); 
-            return tags; 
+        row.append("<td>" + data.tags[i].name + "</td>")
+          .append("<td>" + data.tags[i].confidence + "</td>")
+        $("tbody").append(row);
 
-            // Show formatted JSON on webpage.
-            $("#responseTextArea").val(JSON.stringify(data, null, 2));
-        })
-        .fail(function(jqXHR, textStatus, errorThrown) {
-            // Display error message.
-            var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
-            errorString += (jqXHR.responseText === "") ? "" : jQuery.parseJSON(jqXHR.responseText).message;
-            alert(errorString);
-        });
-    };
+      }
 
+
+      //capturing tags as an object; 
+      console.log(data.tags);
+      var tags = data.tags;
+      console.log(tags);
+      return tags;
+
+      // Show formatted JSON on webpage.
+      $("#responseTextArea").val(JSON.stringify(data, null, 2));
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      // Display error message.
+      var errorString = (errorThrown === "") ? "Error. " : errorThrown + " (" + jqXHR.status + "): ";
+      errorString += (jqXHR.responseText === "") ? "" : jQuery.parseJSON(jqXHR.responseText).message;
+      alert(errorString);
+    });
+};
+*/
