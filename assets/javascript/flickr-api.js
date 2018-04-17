@@ -111,7 +111,7 @@ $("#search-btn").on("click", function (event) {
 
   var photoURL = "", photoID = "", tags = $("#search-bar").val().trim();
 
-  var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=mural,grafitti&text=';
+  var jsonRequest = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=mural,grafitti&text=';
 
   if (tags !== "") {
     jsonRequest += "'streetart " + tags+"'";
@@ -124,7 +124,7 @@ $("#search-btn").on("click", function (event) {
     // Loop through the results with the following function
     $.each(data.photos.photo, function (i, item) {
       // Build + store in var the url of the photo in order to link to it
-      photoURL = 'http://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg'
+      photoURL = 'https://farm' + item.farm + '.static.flickr.com/' + item.server + '/' + item.id + '_' + item.secret + '_m.jpg'
       // console.log(photoURL);
       photoID = item.id;
       //console.log(item.id);
@@ -277,7 +277,7 @@ $("#submit-btn").on("click", function () {
 
 // GEO TAGGING AJAX CALLS
 function geotagging(inputID, inputURL) {
-  var newRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + inputID, existsAlready = false, existingKey, lat, lon, existingRating = 0, ratingCount = 0, ratingDisplay = "none";
+  var newRequest = 'https://api.flickr.com/services/rest/?&method=flickr.photos.geo.getLocation&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + inputID, existsAlready = false, existingKey, lat, lon, existingRating = 0, ratingCount = 0, ratingDisplay = "none";
   //console.log(newRequest);
   // Another AJAX call using the shortcut --> 
 
