@@ -9,25 +9,24 @@
     <!-- bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script> -->
 </head>
 <body>
 
-<h1>Street Art Finder Modal Display</h1>
 <div class="container">
+    <h1>Street Art Finder Modal Display</h1>
+
         <div class="input-group mb-3">
                 <div class="input-group-prepend">
                   <span class="input-group-text" id="inputGroup-sizing-default">Image URL</span>
                 </div>
                 <input type="text" name="inputImage" id="inputImage" class="form-control" aria-label="Default" value="https://static1.squarespace.com/static/57478a207da24f0db50fe06a/t/59d2d2724c326deaf07b4a71/1506988668387/DSC01066+%281%29.jpg"aria-describedby="inputGroup-sizing-default">
               </div>
-<input type="text" name="inputImage" id="inputImage" value="https://static1.squarespace.com/static/57478a207da24f0db50fe06a/t/59d2d2724c326deaf07b4a71/1506988668387/DSC01066+%281%29.jpg" />
 <button class="btn-primary btn" onclick="processImage()">Analyze image</button>
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalLong">
-        Launch demo modal
-      </button>
-
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal"> Modal</button>
 <br><br>
         <div class="row justify-content-md-center">
                 
@@ -36,32 +35,35 @@
                         <br><br>
                         <img id="sourceImage" style="width:400px; " />
                     </div>
-                    <div id="flickr-image"></div>
+                    <div id="responseTextArea"> </div>
+                    <div class="card-deck" id= "flickr-image"></div>
                 
           </div>
-
-    
-        
-        
-
-
-<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-                    <div id="jsonOutput" style="width:600px; display:table-cell;">
-                            Response:
-                            <br><br>
-                            
-                            <textarea id="responseTextArea" class="UIInput" style="width:580px; height:400px;"></textarea>
-                        </div>
+                <table id="my-table"class="table">
+                
+                    <thead class="thead-light">
+                      <tr>
+                        <th scope="col">Tag</th>
+                        <th scope="col">Percentage</th>
     
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <!-- the body of the table will go here -->
+                    </tbody>
+                
+                </table>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -70,8 +72,8 @@
           </div>
         </div>
       </div>
-    </div>
 </body>
+
 </html>
 
 
@@ -115,10 +117,28 @@
             data: '{"url": ' + '"' + sourceImageUrl + '"}',
         })
         .done(function(data) {
+
+          for (let i = 0; i < data.tags.length; i++) {
+            console.log(data.tags[i].name) ;
+            console.log(data.tags[i].confidence) ;
+            var update = $('<input type="button" id="update" value="update" style="width:80px" class="btn btn-primary" />');
+            var remove = $('<input type="button" id="remove" value="remove" style="width:80px" class="btn btn-danger" />');
+            var td = $("<td></td>");
+            var td2 = $("<td></td>");
+            var row = $("<tr>");
+
+                row.append("<td>" + data.tags[i].name + "</td>")
+                .append("<td>" + data.tags[i].confidence + "</td>")
+                $("tbody").append(row);
+                
+              }
+       
+        
             //capturing tags as an object; 
             console.log (data.tags); 
             var tags = data.tags; 
             console.log (tags); 
+            return tags; 
 
             // Show formatted JSON on webpage.
             $("#responseTextArea").val(JSON.stringify(data, null, 2));
@@ -166,7 +186,7 @@ var photoID = ""
 var lat = "34.04117";
 var lon = "-118.23298";
 var radius = "25";
-var per_page = "10";
+var per_page = "3";
 
 
 // Main API Query on request that we're sending to Flickr. 
@@ -192,10 +212,15 @@ $.getJSON(jsonRequest, function (data) {
     // Create the imgContainer with string variable which will hold all the link location,
     // title, author link, and author name into a text string. 
 
-    var imgCont = '<div class="image-container"> \
-            <a class="title" href="http://www.flickr.com/photos/' + photoURL + '"> \
-              <img id='+ photoID + ' src="' + photoURL + '" /> \
-            </a>';
+    var imgCont = '<div class="card"> <div class="image-container"> <img class="card-img-top" src="http://www.flickr.com/photos/' + photoURL + '"> \
+              <img id='+ photoID + ' src="' + photoURL + '" alt="Card image cap"> \
+              <div class="card-body"><h5 class="card-title">Card title</h5>\
+              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>\
+              </div>      <div class="card-footer">      <small class="text-muted">Last updated 3 mins ago</small>\
+              </div> </div> </div>'
+            // <a class="title" href="http://www.flickr.com/photos/' + photoURL + '"> \
+            //   <img id='+ photoID + ' src="' + photoURL + '" /> \
+            // </a>';
 
     // Close the div in the 'imgCont' variable
     imgCont += '</div>';
@@ -205,11 +230,6 @@ $.getJSON(jsonRequest, function (data) {
     $("#update-image-object").attr("data-id",photoID);
   });
 });
-/*
-$("#update-image-object").on("click",function(){
-  const name,
 
-})*/
-// GEO TAGGING AJAX CALLS
 
 </script>
