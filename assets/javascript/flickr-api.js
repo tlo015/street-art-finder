@@ -281,7 +281,7 @@ $("#search-btn").on("click", function (event) {
 
   var photoURL = "", photoID = "", tags = $("#search-bar").val().trim();
 
-  var jsonRequest = 'http://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=mural,grafitti&text=';
+  var jsonRequest = 'https://api.flickr.com/services/rest/?&method=flickr.photos.search&api_key=' + apiKey + '&format=json&jsoncallback=?&sort=relevance&lat=' + lat + '&lon=' + lon + '&radius=' + radius + '&per_page=' + per_page + '&tags=mural,grafitti&text=';
 
 
   if (tags !== "") {
