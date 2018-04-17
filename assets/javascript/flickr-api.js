@@ -9,6 +9,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
+var markers = [];
 
 var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f6d38bb57c2af5e', per_page = "100", mapLatLng, map, markerArray = [], starRating;
 //default map coordinates
@@ -248,8 +249,14 @@ function generatePin(id, latitude, longitude, title, rating, url) {
 
   map.addListener("click", function () {
     infowindow.close();
-  })
+  });
 
+  markers.push(marker);
+
+  var markerCluster = new MarkerClusterer(map, markers, {
+    maxZoom: 15,
+    zoomOnClick: true,
+  });
 
 }
 
