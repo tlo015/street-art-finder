@@ -8,7 +8,7 @@
     <!-- bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/CSS/style.css">
     <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Street Art Finder</title>
@@ -70,7 +70,6 @@
     <!-- hold map -->
     <div id="map"></div>
     <!-- hold mobile image to only show on mobile and on click of pin-->
-    <!-- refer to Redfin mobile for inspo -->
     <!-- Upon clicking image, modal will show up with img, form and comment -->
     <div class="art-image" id="mobileImgWrapper">
     </div>
@@ -82,48 +81,82 @@
     <div class="modal" id="info-modal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-                <!-- results and user interaction -->
                 <div class="modal-body">
-                    <h1 id="title-header"></h1>
-                    <h3>Rating:
-                        <span id="rating-header"></span>
-                    </h3>
+                       
+                    <!-- results and user interaction -->
+                    <div class="modal-body">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    <div class="card-header" id="title-masthead">
+                        <h4 id="title-header"></h4>
+                        <h6 id="title-rating">Rating:
+                            <span id="rating-header"></span>
+                        </h6>
+                        
+                    </div>
+                    
                     <!-- FLICKR Image Will Go Here -->
                     <img src="" class="image" id="flickr-image" alt="Art Image">
+                    
                     <!-- COMMENTS USER INPUT  -->
                     <div class="card input-card">
-                        <!-- ratings -->
-                        <p>Submit Rating:</p>
-                        <div class="stars">
-                            <form action="">
-                                <input data-rating="5" class="star star-5" id="star-5" type="radio" name="star" />
-                                <label data-rating="5" class="star star-5" for="star-5"></label>
-                                <input data-rating="4" class="star star-4" id="star-4" type="radio" name="star" />
-                                <label data-rating="4" class="star star-4" for="star-4"></label>
-                                <input data-rating="3" class="star star-3" id="star-3" type="radio" name="star" />
-                                <label data-rating="3" class="star star-3" for="star-3"></label>
-                                <input data-rating="2" class="star star-2" id="star-2" type="radio" name="star" />
-                                <label data-rating="2" class="star star-2" for="star-2"></label>
-                                <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star" />
-                                <label data-rating="1" class="star star-1" for="star-1"></label>
-                            </form>
+                        
+                        <!-- NAME -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="title">Name:</p>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="name" class="card-body" id="input-name" placeholder="Your name">
+                            </div>
                         </div>
-                        <!-- title -->
-                        <p>Change the title:</p>
-                        <input type="title" class="card-body" id="input-title">
-                        <!-- comments -->
-                        <p>Enter Comments:</p>
-                        <p>Name:</p>
-                        <input type="name" class="card-body" id="input-name" placeholder="Your name">
-                        <p>Comment</p>
-                        <input type="comments" class="card-body" id="input-comments" placeholder="Enter comments here regarding the artwork">
-                        <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+
+                        <!-- TITLE -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="title">Title:</p>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="title" class="card-body" id="input-title" placeholder="Rename the title">
+                            </div>
+                        </div>
+
+                        <!-- RATING -->
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p class="rating-header title">Submit Rating:</p>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="stars">
+                                    <form action="">
+                                        <input data-rating="5" class="star star-5" id="star-5" type="radio" name="star" />
+                                        <label data-rating="5" class="star star-5" for="star-5"></label>
+                                        <input data-rating="4" class="star star-4" id="star-4" type="radio" name="star" />
+                                        <label data-rating="4" class="star star-4" for="star-4"></label>
+                                        <input data-rating="3" class="star star-3" id="star-3" type="radio" name="star" />
+                                        <label data-rating="3" class="star star-3" for="star-3"></label>
+                                        <input data-rating="2" class="star star-2" id="star-2" type="radio" name="star" />
+                                        <label data-rating="2" class="star star-2" for="star-2"></label>
+                                        <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star" />
+                                        <label data-rating="1" class="star star-1" for="star-1"></label>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- COMMENT -->                        
+                        <p class="comm-title title">Comment:</p>
+                        <textarea type="comments" class="card-body" id="textarea-comments" rows="4" placeholder="Enter comments here regarding the artwork"></textarea>
+
+                        <!-- BUTTON -->
+                        <button type="submit" class="btn" id="submit-btn">Submit</button>
                     </div>
 
                     <!-- STORED Comments -->
                     <div class="card" id="stored">
                         <div class="card-header">
-                            <h6> COMMENTS </h6>
+                            <h6 class="comm-header"> COMMENTS </h6>
                         </div>
                         <div id="stored-comments"></div>
                     </div>
