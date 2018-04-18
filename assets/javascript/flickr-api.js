@@ -311,6 +311,7 @@ $("#search-btn").on("click", function (event) {
       // Create the imgContainer with string variable which will hold all the link location,
       // title, author link, and author name into a text string. 
       geotagging(photoID, photoURL);
+      // processImage(photoURL);
       getAuthor(photoID);
     });
   });
@@ -363,7 +364,7 @@ $("#map").on("click", ".clickable-image", function () {
     if (snapshotGlobal[key].id == id) {
       const comments = snapshotGlobal[key].comments;
       for (const key in comments) {
-        const newComment = "<div class='card-body'><p>Name: " + comments[key].name + "</p><p>Comment: " + comments[key].comment + "</p></div>";
+        const newComment = "<div class='card-body'><p class='stored-name'>Name: " + comments[key].name + "</p><p>Comment: " + comments[key].comment + "</p></div>";
         $("#stored-comments").append(newComment);
       }
 
