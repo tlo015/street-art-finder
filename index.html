@@ -21,13 +21,14 @@
     <nav class="navbar navbar-light">
         <img class="logo-img" src="assets/images/logo.png">
         <img class="mobile-logo" src="assets/images/mobilelogo.png">
+
         <!-- Search Bar -->
         <form class="form-inline" id="searchContainer">
-            <input type="text" placeholder="Search.." class="input-search" id="search-bar">
-            <button type="submit" class="search" id="search-btn">
+            <input class="form-control input-search" id="search-bar" type="text" placeholder="Search.." aria-label="Search">
+            <button class="btn" id="search-btn" type="submit">
                 <i class="fa fa-search"></i>
             </button>
-        </form>
+          </form>
     </nav>
 
     <div class="carousel-container">
@@ -65,7 +66,9 @@
       </div>
 
       <div class="start-btn-container">
-        <button type="button" class="start-btn">Lets Start</button>
+        <button class="btn start-btn" id="search-btn" type="submit">
+            Let's Start
+        </button>
       </div>
 
 <div class="main-body-container">
@@ -153,7 +156,6 @@
                         <!-- COMMENT -->                        
                         <p class="comm-title title">Comment:</p>
                         <textarea type="comments" class="card-body" id="input-comments" rows="4" placeholder="Enter comments here regarding the artwork"></textarea>
-
                         <!-- BUTTON -->
                         <button type="submit" class="btn" id="submit-btn">Submit</button>
                     </div>

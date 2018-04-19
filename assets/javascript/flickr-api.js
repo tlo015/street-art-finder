@@ -326,9 +326,9 @@ function getAuthor(picID) {
     // console.log (data.photo.owner.username); 
     // console.log (data.photo.owner.location);
     if (data.photo.owner.realname !== "") {
-      author = "Name: " + data.photo.owner.realname;
+      author = "<h6> Name: " + data.photo.owner.realname + "</h6>";
     }
-    author += " Location: " + data.photo.owner.location;
+    author += " <h6>Location: " + data.photo.owner.location + "</h6>";
     console.log(author);
     $("#author-info").text(author);
     // Loop through the results with the following function
@@ -354,11 +354,10 @@ $("#map").on("click", ".clickable-image", function () {
   //console.log("this is id"+id); 
   getAuthor(id);
   //console.log("this is author"+test); 
-
   $("#input-name").val("");
   $("#input-comments").val("");
   $("#rating-header").text($(this).attr("data-rating"));
-  $("#title-header").text(title);
+  $("#title-header").text(upperCaseTitle);
   $("#author-info").text()
   $("#input-title").val("");
   $("#flickr-image").attr("src", url).attr("data-id", id).attr("data-lon", $(this).attr("data-lon"))
