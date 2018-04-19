@@ -15,7 +15,6 @@ var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f
 //default map coordinates
 var lat = "34.04117", lon = "-118.23298", radius = "20";
 
-
 function filterFirebase() {
   //console.log(snapshotGlobal);
   for (const key in snapshotGlobal) {
@@ -236,7 +235,7 @@ function generatePin(id, latitude, longitude, title, rating, url) {
 
     content: "<div style='width:150px; text-align: left;'>" + "<p class='info-box-text'>Title: <span id='title" + id + "'>" + title +
       "</span></p><p class='info-box-text'>Rating: <span id='rating" + id + "'>" + rating +
-      "</span></p><center><img class='clickable-image' id=picture" + id + " data-id=" + id +" data-image=" + url +
+      "</span></p><center><img class='clickable-image' id=picture" + id + " data-id=" + id + " data-image=" + url +
       " data-lat=" + latitude + " data-lon=" + longitude + " data-rating=" + rating +
       " data-toggle='modal' data-target='#info-modal' src='" + url +
       "' alt='" + title + "' height='100' width='100'></center>" + "</div>"
@@ -310,30 +309,28 @@ $("#search-btn").on("click", function (event) {
       //console.log(item.id);
       // Create the imgContainer with string variable which will hold all the link location,
       // title, author link, and author name into a text string. 
-      geotagging(photoID, photoURL);
-      // processImage(photoURL);
-      getAuthor(photoID);
+
+      geotagging(photoID, photoURL, originalTitle);
+
     });
   });
 });
 function getAuthor(picID) {
-  var jsonRequest = 'https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + picID ;
-  console.log(jsonRequest);
+  var jsonRequest = 'https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + picID;
+  var author = "";
   // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
   $.getJSON(jsonRequest, function (data) {
-    console.log (data); 
-    console.log (data.photo.dates); 
-    console.log (data.photo.owner.realname); 
-    console.log (data.photo.owner.username); 
-    console.log (data.photo.owner.location); 
-
-
-
-
+    // console.log (data); 
+    // console.log (data.photo.dates); 
+    // console.log (data.photo.owner.realname); 
+    // console.log (data.photo.owner.username); 
+    // console.log (data.photo.owner.location);
+    if (data.photo.owner.realname !== "") {
+      author = "<h6> Author: " + data.photo.owner.realname + "</h6>";
+    }
+    $("#author-info").html(author);
     // Loop through the results with the following function
-
   });
-
 }
 //displays the corresponding image and assigns all relevant data attributes to image
 $("#map").on("click", ".clickable-image", function () {
@@ -350,12 +347,17 @@ $("#map").on("click", ".clickable-image", function () {
   <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star" />\
   <label data-rating="1" class="star star-1" for="star-1"></label></form>');
 
-  var url = $(this).attr("data-image"), id = $(this).attr("data-id"), title = $("#title"+id).text();
-  $("#input-name").val("anonymous");
+  var url = $(this).attr("data-image"), id = $(this).attr("data-id"), title = $("#title" + id).text()
+  //console.log("this is title"+title); 
+  //console.log("this is id"+id); 
+  getAuthor(id);
+  //console.log("this is author"+test); 
+  $("#input-name").val("");
   $("#input-comments").val("");
   $("#rating-header").text($(this).attr("data-rating"));
-  $("#title-header").text(title);
-  $("#input-title").val(title);
+  $("#title-header").text(title.toUpperCase());
+  $("#author-info").text()
+  $("#input-title").val("");
   $("#flickr-image").attr("src", url).attr("data-id", id).attr("data-lon", $(this).attr("data-lon"))
     .attr("data-lat", $(this).attr("data-lat")).attr("data-url", $(this).attr("data-image"))
     .attr("alt", $(this).attr("alt")).attr("data-rating", $(this).attr("data-rating"));
@@ -376,9 +378,16 @@ $("#map").on("click", ".clickable-image", function () {
 
 //updates firebase, infowindow, and module with relevant information
 function pushtoFirebase() {
-  var existsAlready = false, comment = $("#input-comments").val().trim(), name = $("#input-name").val().trim(), title = $("#input-title").val().trim(), ratingDisplay, existingRating = 0, ratingCount = 0;
+  var existsAlready = false, comment = $("#input-comments").val().trim(), name = "anonymous", title = $("#title-header").text(), ratingDisplay, existingRating = 0, ratingCount = 0;
   //console.log(snapshotGlobal);
   //console.log(title);
+  console.log(comment, name, title);
+  if ($("#input-name").val() !== "") {
+    name = $("#input-name").val().trim();
+  }
+  if ($("#input-title").val() !== "") {
+    title = $("#input-title").val().trim();
+  }
   for (const key in snapshotGlobal) {
     if (snapshotGlobal[key].id == $("#flickr-image").attr("data-id")) {
       if (comment != "") {
@@ -449,7 +458,7 @@ function pushtoFirebase() {
               }
               $("#rating" + $("#flickr-image").attr("data-id")).text(ratingDisplay);
               $("#rating-header").text(ratingDisplay);
-              $("#picture"+$("#flickr-image").attr("data-id")).attr("data-rating",ratingDisplay);
+              $("#picture" + $("#flickr-image").attr("data-id")).attr("data-rating", ratingDisplay);
             });
           }
         }
@@ -457,7 +466,7 @@ function pushtoFirebase() {
     });
   }
   if (comment != "") {
-    const newComment = "<div class='card-body'><p>Name: " + name + "</p><p>Comment: " + comment + "</p></div>";
+    const newComment = "<div class='card-body'><p class='stored-name'>Name: " + name + "</p><p>Comment: " + comment + "</p></div>";
     $("#stored-comments").append(newComment);
     $("#input-comments").val("");
     $("input-name").val("");
@@ -489,7 +498,7 @@ function geotagging(inputID, inputURL, originalTitle) {
   };
 
   $.getJSON(newRequest, function (data) {
-    console.log(data); // snapshot of the object
+    // console.log(data); // snapshot of the object
     //console.log(data.photo.location.latitude)
     //console.log(data.photo.location.longitude)
     if (!existsAlready) {

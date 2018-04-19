@@ -20,6 +20,10 @@ body{
     z-index: 1;
 }
 
+#searchContainer{
+    display: inline-block;
+}
+
 .info-box-text{
     margin-bottom: .2rem;
 }
@@ -31,7 +35,7 @@ body{
 .mobile-logo{
     height: 150px;
 }
- 
+
 /* MAP */
 #map{
     border-style: solid;
@@ -50,10 +54,19 @@ body{
 }
 
 /* MODAL */
+.modal-body{
+    padding-top: 2px 10px 0px 0px;
+}
+
 /* TITLE */
+.btn-ctn{
+    padding: 0px 5px;
+}
+
+
 .close{
     opacity: 0.25;
-    margin-right: 5px;
+    padding: 2px;
 }
 
 #title-masthead{
@@ -142,6 +155,37 @@ textarea{
 
 h6{
     margin: 0px;
+}
+
+/* Slideshow container */
+#carousel{
+    border-style: solid;
+    border-color: lightgrey;
+    border-width: 1px;
+    margin: 20px 16px;
+    height: 500px; 
+    position: relative;   
+}
+
+.carousel-img{
+    width: 100%;
+    height: 500px; 
+}
+
+/* start button */
+.start-btn{
+    margin-left: auto;
+    margin-right: auto;
+    width: 150px;
+}
+
+.start-btn-container{
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.main-body-container{
+    display: none;
 }
 
 /* STAR RATING */
@@ -263,32 +307,5 @@ input.star:checked ~ .rev-box{
     }
 }
 
-/* Slideshow container */
-#carousel{
-    border-style: solid;
-    border-color: lightgrey;
-    border-width: 1px;
-    margin: 20px 16px;
-    height: 500px; 
-    position: relative;   
-}
 
-.carousel-img{
-    width: 100%;
-    height: 500px; 
-}
 
-/* start button */
-.start-btn{
-    margin-left: auto;
-    margin-right: auto;
-    width: 150px;
-}
-
-.start-btn-container{
-    text-align: center;
-}
-
-.main-body-container{
-    display: none;
-}
