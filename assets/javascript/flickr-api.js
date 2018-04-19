@@ -325,9 +325,9 @@ function getAuthor(picID) {
     // console.log (data.photo.owner.realname); 
     // console.log (data.photo.owner.username); 
     // console.log (data.photo.owner.location); 
-    author = "Name: "+data.photo.owner.realname + " Flickr User:"+data.photo.owner.username + " Location: "+data.photo.owner.location;
+    author = "<h6> Name: " + data.photo.owner.realname + "</h6> <h6>Location: " + data.photo.owner.location + "</h6>";
     console.log(author); 
-    $("#author-info").text(author);
+    $("#author-info").html(author);
     // Loop through the results with the following function
   });
 }
@@ -347,7 +347,8 @@ $("#map").on("click", ".clickable-image", function () {
   <label data-rating="1" class="star star-1" for="star-1"></label></form>');
 
   var url = $(this).attr("data-image"), id = $(this).attr("data-id"), title = $("#title"+id).text()
-  console.log("this is title"+title); 
+  var upperCaseTitle = title.toUpperCase();
+  console.log("this is title"+upperCaseTitle); 
   console.log("this is id"+id); 
   var test = ""; 
   test = getAuthor(id); 
@@ -357,7 +358,7 @@ $("#map").on("click", ".clickable-image", function () {
   console.log("happy!")
   $("#input-comments").val("");
   $("#rating-header").text($(this).attr("data-rating"));
-  $("#title-header").text(title);
+  $("#title-header").text(upperCaseTitle);
   $("#author-info").text()
   $("#input-title").val(title);
   $("#flickr-image").attr("src", url).attr("data-id", id).attr("data-lon", $(this).attr("data-lon"))
