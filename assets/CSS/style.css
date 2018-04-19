@@ -31,7 +31,7 @@ body{
 .mobile-logo{
     height: 150px;
 }
- 
+
 /* MAP */
 #map{
     border-style: solid;
@@ -50,10 +50,19 @@ body{
 }
 
 /* MODAL */
+.modal-body{
+    padding-top: 2px 10px 0px 0px;
+}
+
 /* TITLE */
+.btn-ctn{
+    padding: 0px 5px;
+}
+
+
 .close{
     opacity: 0.25;
-    margin-right: 5px;
+    padding: 2px;
 }
 
 #title-masthead{
@@ -291,4 +300,16 @@ input.star:checked ~ .rev-box{
 
 .main-body-container{
     display: none;
+}
+
+/* STAR RATING AVERAGE */
+span.stars, span.stars span {
+    display: block;
+    background: url(assets/images/stars.png) 0 -16px repeat-x;
+    width: 80px;
+    height: 16px;
+}
+
+span.stars span {
+    background-position: 0 0;
 }
