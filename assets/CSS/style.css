@@ -1,8 +1,3 @@
-#flickr-image {
- height: 400px;
- width: 100%;
-}
-
 .clickable-image:hover{
     cursor: pointer;
 }
@@ -36,10 +31,6 @@ body{
 .mobile-logo{
     height: 150px;
 }
-
-input{
-    outline: none;
-}
  
 /* MAP */
 #map{
@@ -58,12 +49,110 @@ input{
     margin: 20px 16px;
 }
 
+/* MODAL */
+/* TITLE */
+.close{
+    opacity: 0.25;
+    margin-right: 5px;
+}
+
+#title-masthead{
+    text-align: center;
+    border-style: solid;
+    border-width: 1px;
+    border-color: gray;
+    margin-bottom: 15px;
+}
+
+/* MODAL IMG */
+#flickr-image {
+    height: auto;
+    max-height: 350px;
+    width: 100%;
+    margin-bottom: 15px;
+   }
+
+/* INPUT COMMENTS */
+.title{
+    margin: 0px;
+    padding: 8px 0px;
+    font-weight: bold;
+}
+
+input{
+    border: 0;
+    outline: none;
+}
+
+.input-card{
+    padding: 10px 15px;
+    border-color: grey;
+}
+
+#input-name{
+    margin: 8px 0px;
+    width: 100%;
+}
+
+#input-title{
+    margin: 8px 0px;
+    width: 100%;
+}
+
+#input-comments{
+    padding: 5px 10px;
+    border-width: 1px;
+    }
+
+.card-body{
+    padding: 0px;
+}
+
+.comm-title{
+    padding-bottom: 0px;
+}
+
+textarea{
+    outline: none;
+    margin-bottom: 15px;
+    border-color: lightgray
+}
+
+/* STORED COMMENTS */
+#stored{
+    margin-top: 20px;
+    border-color: grey;
+}
+
+.card-header{
+    padding: 12px 5px
+}
+
+#stored-comments{
+    padding: 5px 15px
+}
+
+.stored-name{
+    margin: 0px;
+}
+
+.comm-header{
+    padding: 0px 10px;
+}
+
+h6{
+    margin: 0px;
+}
 
 /* STAR RATING */
+.rating-header{
+    padding: 5px 0px;
+}
+
 @import url(https://fonts.googleapis.com/css?family=Roboto:500,100,300,700,400);
 
 div.stars{
-    width: 115px;
+    width: 113px;
     display: inline-block;
 }
 
@@ -129,37 +218,6 @@ label.review{
 input.star:checked ~ .rev-box{
     height: 125px;
     overflow: visible;
-}
-
-/* INPUT COMMENTS */
-.input-card{
-    border-radius: 0px;
-}
-
-#input-comments{
-    padding: 5px 5px 5px 5px;
-    border-width: 0px;
-    }
-
-textarea{
-    outline: none;
-}
-
-/* STORED COMMENTS */
-#stored{
-    margin-top: 20px;
-}
-
-.card-header{
-    padding: 12px 5px
-}
-
-#stored-comments{
-    padding: 12px 5px
-}
-
-h6{
-    margin: 0px;
 }
 
 
