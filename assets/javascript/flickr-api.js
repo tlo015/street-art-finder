@@ -324,7 +324,7 @@ function getAuthor(picID) {
     // console.log (data.photo.owner.realname); 
     // console.log (data.photo.owner.username); 
     // console.log (data.photo.owner.location); 
-    author = "Name: "+data.photo.owner.realname + "User:"+data.photo.owner.username + "from: "+data.photo.owner.location;
+    author = "Name: "+data.photo.owner.realname + " Flickr User:"+data.photo.owner.username + " Location: "+data.photo.owner.location;
     console.log(author); 
     $("#author-info").text(author);
     // Loop through the results with the following function
