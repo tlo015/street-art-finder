@@ -15,7 +15,6 @@ var database = firebase.database(), snapshotGlobal, apiKey = '5484bba206bf2c1e6f
 //default map coordinates
 var lat = "34.04117", lon = "-118.23298", radius = "20";
 
-
 function filterFirebase() {
   //console.log(snapshotGlobal);
   for (const key in snapshotGlobal) {
@@ -310,29 +309,26 @@ $("#search-btn").on("click", function (event) {
       //console.log(item.id);
       // Create the imgContainer with string variable which will hold all the link location,
       // title, author link, and author name into a text string. 
-      geotagging(photoID, photoURL);
-      getAuthor(photoID);
+      geotagging(photoID, photoURL, originalTitle);
+
     });
   });
 });
 function getAuthor(picID) {
   var jsonRequest = 'https://api.flickr.com/services/rest/?&method=flickr.photos.getInfo&api_key=' + apiKey + '&format=json&jsoncallback=?&photo_id=' + picID ;
-  console.log(jsonRequest);
+  var author = ""; 
   // This is a shorthanded AJAX function --> Our initial JSON request to Flickr
   $.getJSON(jsonRequest, function (data) {
-    console.log (data); 
-    console.log (data.photo.dates); 
-    console.log (data.photo.owner.realname); 
-    console.log (data.photo.owner.username); 
-    console.log (data.photo.owner.location); 
-
-
-
-
+    // console.log (data); 
+    // console.log (data.photo.dates); 
+    // console.log (data.photo.owner.realname); 
+    // console.log (data.photo.owner.username); 
+    // console.log (data.photo.owner.location); 
+    author = "Name: "+data.photo.owner.realname + "User:"+data.photo.owner.username + "from: "+data.photo.owner.location;
+    console.log(author); 
+    $("#author-info").text(author);
     // Loop through the results with the following function
-
   });
-
 }
 //displays the corresponding image and assigns all relevant data attributes to image
 $("#map").on("click", ".clickable-image", function () {
@@ -349,11 +345,19 @@ $("#map").on("click", ".clickable-image", function () {
   <input data-rating="1" class="star star-1" id="star-1" type="radio" name="star" />\
   <label data-rating="1" class="star star-1" for="star-1"></label></form>');
 
-  var url = $(this).attr("data-image"), id = $(this).attr("data-id"), title = $("#title"+id).text();
+  var url = $(this).attr("data-image"), id = $(this).attr("data-id"), title = $("#title"+id).text()
+  console.log("this is title"+title); 
+  console.log("this is id"+id); 
+  var test = ""; 
+  test = getAuthor(id); 
+  console.log("this is author"+test); 
+  
   $("#input-name").val("anonymous");
+  console.log("happy!")
   $("#input-comments").val("");
   $("#rating-header").text($(this).attr("data-rating"));
   $("#title-header").text(title);
+  $("#author-info").text()
   $("#input-title").val(title);
   $("#flickr-image").attr("src", url).attr("data-id", id).attr("data-lon", $(this).attr("data-lon"))
     .attr("data-lat", $(this).attr("data-lat")).attr("data-url", $(this).attr("data-image"))
@@ -488,7 +492,7 @@ function geotagging(inputID, inputURL, originalTitle) {
   };
 
   $.getJSON(newRequest, function (data) {
-    console.log(data); // snapshot of the object
+    // console.log(data); // snapshot of the object
     //console.log(data.photo.location.latitude)
     //console.log(data.photo.location.longitude)
     if (!existsAlready) {
