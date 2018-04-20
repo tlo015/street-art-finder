@@ -19,16 +19,20 @@
 <body>
     <!-- Header/Navbar/Jumbotron-->
     <nav class="navbar navbar-light">
-        <img class="logo-img" src="assets/images/logo.png">
-        <img class="mobile-logo" src="assets/images/mobilelogo.png">
-
+        <a class="navbar-brand"></a>
         <!-- Search Bar -->
         <form class="form-inline" id="searchContainer">
-            <input class="form-control input-search" id="search-bar" type="text" placeholder="Search.." aria-label="Search">
-            <button class="btn" id="search-btn" type="submit">
-                <i class="fa fa-search"></i>
-            </button>
-          </form>
+        <div class="form-row" id="search-ctn">
+            <div class="col-10">
+                <input class="form-control input-search" id="search-bar" type="text" placeholder="Search.." aria-label="Search">
+            </div>
+            <div class="col-2">
+                <button class="btn" id="search-btn" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+        </form>
     </nav>
 
     <div class="carousel-container">
@@ -45,24 +49,27 @@
             <div class="carousel-item active">
               <img class="d-block carousel-img" src="assets/images/one.jpg" alt="First slide">
               <div class="carousel-caption d-none d-md-block">
-                <h5>A collections of visual art created in public spaces</h5>
+                <h4>Street Art is:</h4>
+                <h5>a Collection of visual art created in public spaces</h5>
               </div>
             </div>
             <div class="carousel-item">
               <img class="d-block carousel-img" src="assets/images/two.jpg" alt="Second slide">
               <div class="carousel-caption d-none d-md-block">
-                <h5>A focus on instagram-able art in Los Angeles</h5>
+                <h4>Street Art is:</h4>
+                <h5>Transformative, it turns dull parts of a city into vivid representations of local identity</h5>
               </div>
             </div>
             <div class="carousel-item">
               <img class="d-block carousel-img" src="assets/images/three.jpg" alt="Third slide">
               <div class="carousel-caption d-none d-md-block">
-                <h5>All types of artist expressions</h5>
+                <h4>Street Art is:</h4>
+                <h5> Engaging with the viewer, making a statement</h5>
               </div>
             </div>
-          </div>
-    
+         </div>
         </div>
+
       </div>
 
       <div class="start-btn-container">
@@ -163,7 +170,7 @@
                     <!-- STORED Comments -->
                     <div class="card" id="stored">
                         <div class="card-header">
-                            <h6 class="comm-header"> COMMENTS </h6>
+                            <h5 class="comm-header"> COMMENTS </h5>
                         </div>
                         <div id="stored-comments"></div>
                     </div>
